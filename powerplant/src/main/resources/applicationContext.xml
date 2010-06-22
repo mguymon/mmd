@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<!-- Session manager -->    
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="annotatedClasses">
+			<list>
+				<value>powerplant.model.Deploy</value>
+				<value>powerplant.model.DeployProcess</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQL5Dialect
+				</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.bytecode.use_reflection_optimizer">true</prop>
+				<prop key="hibernate.use_outer_join">true</prop>
+				<prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</prop>
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.use_query_cache">false</prop>
+				<prop key="hibernate.connection.autoReconnect">true</prop>
+        		<prop key="hibernate.connection.autoReconnectForPools">true</prop>
+        		<prop key="hibernate.connection.is-connection-validation-required">true</prop>				
+			</props>
+		</property>
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- Transaction manager -->
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="txProxyTemplate" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="txManager" />
+		</property>
+		<property name="proxyTargetClass">
+			<value>true</value>
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="create*">PROPAGATION_REQUIRED</prop>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="get*">PROPAGATION_SUPPORTS</prop>				
+			</props>
+		</property>
+	</bean>
+
+	<!-- DAO definitions -->
+	<bean id="deployDAO" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="powerplant.DeployDAO">
+				<property name="sessionFactory">
+					<ref bean="sessionFactory" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+</beans>

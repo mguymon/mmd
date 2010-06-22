@@ -1,0 +1,11 @@
+[<% @clients.each do |client| %>
+	{text:"<%= client.short_name %>", id:'client-<%=client.id%>', children: [
+		<% client.projects.each do |project| %>
+			{text:"<%=project.name%>", id:'project-<%=project.id%>', children: [
+				<% project.apps.each do |application| %>
+					{text:"<%=application.name%>", id:'application-<%=application.id%>', leaf: true },
+				<% end %>
+			] },
+		<% end %>
+	]},
+<% end %>]

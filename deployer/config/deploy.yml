@@ -1,0 +1,14 @@
+development:
+  scripts: <%= RAILS_ROOT %>/script
+  workspace: <%= RAILS_ROOT %>/workspace/devel
+  should_use_threads: true
+
+test:
+  scripts: <%= RAILS_ROOT %>/script
+  workspace: <%= RAILS_ROOT %>/tmp/workspace
+  should_use_threads: false
+
+production:
+  scripts: <%= RAILS_ROOT %>/script
+  workspace: <%= RAILS_ROOT %>/workspace/prod
+  should_use_threads: false

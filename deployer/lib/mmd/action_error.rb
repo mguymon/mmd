@@ -1,0 +1,3 @@
+class ActionError < RuntimeError
+  
+end

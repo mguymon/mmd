@@ -1,0 +1,10 @@
+{ records:
+    [ 
+      <%- @environments.each do |environment| -%>
+        { "guid": <%=environment.id%>,
+          "name": '<%=  environment.name%>',
+          "deployment_mode": '<%=environment.deployment_mode%>',
+          "is_running": <%= environment.deploy_process != nil %> }
+      <%- end -%>
+    ]
+}

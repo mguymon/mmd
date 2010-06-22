@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>	
+	
+	<bean id="dataSource" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+  		<property name="targetClass"><value>powerplant.DeployerService</value></property>
+  		<property name="targetMethod"><value>getDataSource</value></property>
+	</bean>
+
+</beans>
