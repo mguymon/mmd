@@ -7,7 +7,7 @@ describe MMD::Spec do
         @spec = create_spec(
           :environment => {
             :deployment_mode => "development",
-            :name => 'fiddy.igicom.com' } )
+            :name => 'fiddy.Slackworks.com' } )
         @checkout_path = @spec.checkout_path
 
         if not File.exists?( @checkout_path )
@@ -69,7 +69,7 @@ describe MMD::Spec do
       File.exist?( File.join( @checkout_path, "configuration_mode.test_3" ) ).should be_false
     end
 
-    it "should execute :all and environment of :fiddy.igicom.com actions in config" do
+    it "should execute :all and environment of :fiddy.Slackworks.com actions in config" do
       remove_matching_files( File.join( @checkout_path, "configuration_actions.test" ) )
       file_name = File.join( @checkout_path, "configuration_environment.test" )
       test_file = create_text_file( file_name, "w+")
@@ -221,7 +221,7 @@ EOF
 
 MMD_ENVIRONMENT_ACTIONS = <<EOF
     lifecycle :build_after do
-      for_environment "fiddy.igicom.com" do
+      for_environment "fiddy.Slackworks.com" do
           action :update_file do
             move "configuration_environment.test", "configuration_environment.test_1"
           end

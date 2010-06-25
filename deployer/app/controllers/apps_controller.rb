@@ -25,8 +25,10 @@ class AppsController < ApplicationController
     def show
       @application = App.find( params[:id] )
       respond_to do |format|
-          format.json { render :file => "applications/index.json.erb", :use_full_path => true }
           format.html { render :file => "applications/index.json.erb", :use_full_path => true }
+          format.json do
+            render :json => { :success => true, :record => @application.attributes }.to_json
+          end
       end
     end
 

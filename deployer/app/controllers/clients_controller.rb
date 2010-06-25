@@ -9,8 +9,7 @@ class ClientsController < ApplicationController
             { :guid      => client.id,
               :type      => client.class.name,
               :name      => client.name,
-              :short_name => client.short_name
-            }
+              :short_name => client.short_name }
           end
 
         format.html {
@@ -19,6 +18,10 @@ class ClientsController < ApplicationController
 
         format.text {
           render :text => { :records => records, :ids => @clients.map(&:id) }.to_json
+        }
+
+        format.json {
+          render :json => clients_to_json( @clients )
         }
 
         format.xml { render( :xml => @clients.to_xml() ) }
@@ -53,6 +56,10 @@ class ClientsController < ApplicationController
         format.text {
           render :text => { :records => records, :ids => @clients.map(&:id) }.to_json
         }
+
+        format.json do
+          render :json => { :success => true, :record => client.attributes }.to_json 
+        end
       end
     end
 
@@ -69,5 +76,57 @@ class ClientsController < ApplicationController
     # DELETE 
     def destroy
       # delete the account
+    end
+
+    protected
+    def clients_to_json( clients )
+
+      json = clients.map do |client|
+        clients_hash = {
+          'text' => client.name,
+          'id' => "client-#{client.id}",
+          'recordId' => client.id,
+          'recordType' => 'client',
+          'leaf' => client.projects.size == 0 }
+
+        clients_hash['children'] = client.projects.map do |project|
+          projects_hash = {
+            'text' => project.name,
+            'id' => "project-#{project.id}",
+            'recordId' => project.id,
+            'recordType' => 'project',
+            'leaf' => project.apps.size == 0
+          }
+
+          projects_hash['children'] = project.apps.map do |app|
+            app_hash = {
+              'text' => app.name,
+              'id' => "app-#{app.id}",
+              'recordId' => app.id,
+              'recordType' => 'app',
+              'leaf' => app.environments.size == 0
+            }
+
+            app_hash['children'] = app.environments.map do |enviro|
+              {
+                'text' => enviro.name,
+                'id' => "environment-#{enviro.id}",
+                'recordId' => enviro.id,
+                'recordType' => 'environment',
+                'leaf' => true
+              }
+            end
+
+            app_hash
+          end
+
+          projects_hash
+        end
+
+        clients_hash
+      end
+      
+      
+      json.to_json
     end
 end

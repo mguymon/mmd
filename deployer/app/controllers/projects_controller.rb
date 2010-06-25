@@ -25,8 +25,10 @@ class ProjectsController < ApplicationController
     def show
       @project = Project.find( params[:id] )
       respond_to do |format|
-          format.json { render :file => "projects/index.json.erb", :use_full_path => true }
           format.html { render :file => "projects/index.json.erb", :use_full_path => true }
+          format.json do
+            render :json => { :success => true, :record => @project.attributes }.to_json
+          end
       end
     end
 

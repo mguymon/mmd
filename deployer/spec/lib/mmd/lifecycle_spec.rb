@@ -26,7 +26,7 @@ describe MMD::Lifecycle do
         @lifecycle.actions.size.should eql(2)
         @lifecycle.actions.each do |action|
             action.mode.should eql( :all )
-            action.environment.should eql( "fiddy.igicom.com".to_sym )
+            action.environment.should eql( "fiddy.Slackworks.com".to_sym )
         end
     end
 
@@ -73,7 +73,7 @@ INVALID_ACTION_CONFIG = <<EOF
 EOF
 
 ACTION_FOR_ENVIRONMENT_CONFIG = <<EOF
-  for_environment :"fiddy.igicom.com" do
+  for_environment :"fiddy.Slackworks.com" do
       action :update_file, :file_path => "somewhere that is here.txt" do
         replace "blah", "woot"
         expand_tokens :file_destination=> "somewhere/else.txt"

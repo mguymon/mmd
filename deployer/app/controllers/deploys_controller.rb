@@ -3,7 +3,7 @@ require 'mmd'
 require 'log4r'
 
 class DeploysController < ApplicationController
-    before_filter :login_required
+    #before_filter :login_required
 
     def create
         @environment = Environment.find( params[:environment_id], :include => [:environment_parameters] )

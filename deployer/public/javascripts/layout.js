@@ -1,13 +1,6 @@
-Ext.ns('MMD');
-MMD.perPage = 10;
+Ext.ns('SpreadEm', 'SpreadEm.Overview');
+SpreadEm.perPage = 10;
 
-function cleanUpActionPanel() {
-  actionPanel = Ext.getCmp('action-panel');
-  actionPanel.removeAll();
-  actionPanel.doLayout();
-
-  return actionPanel;
-}
 
 var perPageButton;
 function bbarPerPage( perPage ) {
@@ -25,77 +18,43 @@ Ext.onReady(function() {
     layout: 'border',
     height: 640,
     renderTo: Ext.getBody(),
-    items: [{
-      region: 'north',
-      xtype: 'panel',
-      title: '<span style="font-size:120%">Mighty Mighty Deployer</span>'
-    }, {
-      title: 'Area',
-      region: 'west',
-      fitToFrame:true,
-      collapsible: true,
-      layout: {
-          type:'vbox',
-          padding:'5',
-          align:'center'
+    items: [
+      {
+        region: 'north',
+        xtype: 'panel',
+        title: '<span style="font-size:120%">SpreadEm</span>'
       },
-      defaults:{margins:'0 0 5 0'},      
-      width: 150,
-      items: [
-        {xtype: 'tbbutton',
-         text: 'Providers',
-         id: 'providers-button',
-         width: 75},
-        {xtype: 'tbbutton',
-         text: 'Reviews',
-         id: 'reviews-button',
-         width: 75},
-        {xtype: 'tbbutton',
-         text: 'Users',
-         id: 'users-button',
-         width: 75}
-      ]
-    },{
-      region: 'center',
-      xtype: 'panel',
-      layout: 'fit',
-      id: 'master-center',
-      autoScroll: true,
-      items: []
-    },{
-      title: 'Actions',
-      id: 'action-panel',
-      region: 'east',
-      xtype: 'panel',
-      fitToFrame:true,
-      collapsible: true,
-      layout: {
-          type:'vbox',
-          padding:'5',
-          align:'center'
-      },
-      defaults:{margins:'0 0 5 0'},
-      width: 200
-    },{
-      id: 'south',
-      itemId: 'south',
-      region: 'south',
-      height: 30,
-      xtype: 'toolbar'
-    }]
+      {
+        region: 'center',
+        xtype: 'panel',
+        layout: 'fit',
+        id: 'master-center',
+        autoScroll: true,
+        items: [
+          SpreadEm.tabs = new Ext.TabPanel({
+            itemIds: 'tabs',
+            activeTab: 0,
+            items:
+              [
+                
+                // Deploys
+                MMD.Deploys.layout,
+                
+                // Admin
+                MMD.Admin.layout,
+
+              ],
+            listeners: {
+              'tabchange': function(comp, tab) {
+              },
+              scope: this
+            }
+          })
+        ]
+      }
+    ]
   });
 
-  Ext.get('providers-button').on('click', function(n){
-    initProviderAdmin();
-  });
-
-  Ext.get('reviews-button').on('click', function(n){
-    initReviewsAdmin();
-  });
-
-  Ext.get('users-button').on('click', function(n){
-    initUsersAdmin();
-  });
 
   perPageButton = new Ext.Button(
     {

@@ -12,7 +12,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-//Igicom Powerplant
+//Slackworks Powerplant
 import powerplant.model.Deploy;
 import powerplant.model.DeployProcess;
 

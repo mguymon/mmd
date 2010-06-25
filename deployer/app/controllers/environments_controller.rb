@@ -30,9 +30,11 @@ class EnvironmentsController < ApplicationController
     def show()
         @environment = Environment.find( params[:id] )
         respond_to do |format|
-            format.json { render :file => "environments/index.json.erb", :use_full_path => true }
             format.html { render :file => "environments/index.json.erb", :use_full_path => true }
             format.xml { render( :xml => @environment.to_xml( :include => { :deploy_process => {:include => :deploy} } ) ) }
+            format.json do
+              render :json => { :success => true, :record => @environment.attributes }.to_json
+            end
         end
     end
 

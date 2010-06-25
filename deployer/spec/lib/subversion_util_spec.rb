@@ -7,7 +7,7 @@ describe SubversionUtil do
   end
 
   it "should export" do
-    # @subversion.export("http://svn.igicom.com:1111/svn/igicom/mighty_mighty_deployer/deployer/trunkspec", "tmp/test_export")
+    # @subversion.export("http://svn.Slackworks.com:1111/svn/Slackworks/mighty_mighty_deployer/deployer/trunkspec", "tmp/test_export")
   end
 end
 

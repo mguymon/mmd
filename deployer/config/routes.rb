@@ -8,7 +8,15 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resource :session
 
-  map.resources :clients
+  map.resources :clients, :collection => { :tree => :post } do |client|
+    client.resources :projects do |project|
+      project.resources :applications do |app|
+        app.resources :environments do |environment|
+          environment.resources :deploys
+        end
+      end
+    end
+  end
 
   map.resources :projects
   
