@@ -55,9 +55,9 @@ module MMD
           @logger.info( "--= Lifecycles #{stage} =--" )
           @lifecycles[stage].actions.each do |action|
             action_environment = convert_to_sym( action.environment )
-            if action_environment == :all or eql_or_included?( @environment_name, action_environment )
+            if action_environment == :all || eql_or_included?( @environment_name, action_environment )
               action_mode = convert_to_sym( action.mode )
-              if action_mode == :all or eql_or_included?( @deployment_mode, action_mode )
+              if action_mode == :all || eql_or_included?( @deployment_mode, action_mode )
                 action.execute
               else
                 @logger.debug( "Action skipped due to deployment_mode [#{@deployment_mode}] for Action [#{action_mode}]" )
