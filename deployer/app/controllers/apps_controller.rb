@@ -1,6 +1,6 @@
 
 class AppsController < ApplicationController
-    #before_filter :login_required
+    before_filter :login_required
     
     def index
       @applications = App.find_all_by_project_id( params[:project_id] )

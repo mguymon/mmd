@@ -14,6 +14,7 @@ module MMD
         params = {:scm_username => nil, :scm_password => nil }.merge( params )
         required_params( params, [ 'svn_url', 'svn_root', 'svn_path', 'checkout_path' ] )
         set_instance_variables( params )
+
         @subversion = SubversionUtil.new(@scm_username, @scm_password)
       end
 

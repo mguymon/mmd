@@ -19,6 +19,8 @@
 class SubversionUtil
 
   def initialize(username=nil, password=nil)
+    @username = username
+    @password = password
 #    authManager = nil
 #    if username and password
 #      auth =
@@ -61,7 +63,7 @@ class SubversionUtil
 #      options[:force],
 #      options[:recursive])
 
-    `svn export #{from_url} #{to_file}` #-r #{options[:rev]} #{'--force' if options[:force] == true}`
+    `svn export #{from_url} #{to_file} #{"--username #{@username}" if @username} #{"--password #{@password}" if @password}` #-r #{options[:rev]} #{'--force' if options[:force] == true}`
   end
   
 end

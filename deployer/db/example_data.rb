@@ -43,7 +43,16 @@ module FixtureReplacement
       a.is_success  = true
       a.log_file    = File.join( deploy_path, "#{String.random}.log" )
       a.path        = deploy_path
-      a.deployed_by = "deployed_by"
+      a.deployed_by = create_account
       a.environment = create_environment
+    end
+
+    attributes_for :account do |a|
+      a.email = "#{String.random}@#{String.random}.com"
+      a.login = String.random
+      
+      password = String.random
+      a.password = password
+      a.password_confirmation = password
     end
 end

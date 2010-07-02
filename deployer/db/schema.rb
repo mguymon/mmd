@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100102030639) do
+ActiveRecord::Schema.define(:version => 20100626011105) do
 
   create_table "accesses", :force => true do |t|
     t.integer "accessor_id",                                    :null => false
@@ -73,7 +73,6 @@ ActiveRecord::Schema.define(:version => 20100102030639) do
   create_table "deploys", :force => true do |t|
     t.datetime "deployed_at",                                   :null => false
     t.datetime "updated_at",                                    :null => false
-    t.string   "deployed_by",    :limit => 200, :default => "", :null => false
     t.boolean  "is_running",                                    :null => false
     t.boolean  "is_success",                                    :null => false
     t.integer  "environment_id",                                :null => false
@@ -82,6 +81,7 @@ ActiveRecord::Schema.define(:version => 20100102030639) do
     t.string   "version",        :limit => 200, :default => ""
     t.text     "note"
     t.string   "path"
+    t.integer  "deployed_by_id"
   end
 
   add_index "deploys", ["environment_id"], :name => "index_deploys_on_environment_id"

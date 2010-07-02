@@ -31,7 +31,6 @@ describe MMD::Actions::Cap do
     MMD::Actions::Logger.stub!(:new).and_return( logger )
     logger.should_receive(:info).with( "username cannot be overridden" )
 
-
     @action = MMD::Action.new( :cap, parameters, :file => 'deploy.rb' ) do
       task 'mmd:echo'
     end

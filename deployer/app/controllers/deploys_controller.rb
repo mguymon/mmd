@@ -3,7 +3,7 @@ require 'mmd'
 require 'log4r'
 
 class DeploysController < ApplicationController
-    #before_filter :login_required
+    before_filter :login_required
 
     def create
         @environment = Environment.find( params[:environment_id], :include => [:environment_parameters] )
@@ -14,7 +14,7 @@ class DeploysController < ApplicationController
         
         @deploy = Deploy.new()
         @deploy.deployed_at = DateTime.now.strftime('%Y-%m-%d %H:%M:%S')
-        @deploy.deployed_by = params[:deployed_by]
+        @deploy.deployed_by = current_account
         @deploy.is_running = true
         @deploy.is_success = false
         @deploy.environment = @environment

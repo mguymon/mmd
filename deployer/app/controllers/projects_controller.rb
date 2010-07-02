@@ -1,6 +1,6 @@
 
 class ProjectsController < ApplicationController
-    #before_filter :login_required
+    before_filter :login_required
     
     def index
       @projects = Project.find_all_by_client_id( params[:client_id] )

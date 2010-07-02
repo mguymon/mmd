@@ -152,6 +152,13 @@ Ext.onReady(function(){
                 tplMarkup: [
                   'Name: {name}<br/>',
                   'Short Name: {short_name}<br/>'
+                ],
+                bbar: [
+                  {
+                    text: 'Edit',
+                    handler: function() {
+                    }
+                  }
                 ]
               },{
                 itemId: 'project',
@@ -162,7 +169,15 @@ Ext.onReady(function(){
                 html: '<div style="padding:5px">Please select a Project</div>',
                 tplMarkup: [
                   'Name: {name}<br/>',
-                  'Short Name: {short_name}<br/>'
+                  'Short Name: {short_name}<br/>',
+                  'Desc: {desc}<br/>'
+                ],
+                bbar: [
+                  {
+                    text: 'Edit',
+                    handler: function() {
+                    }
+                  }
                 ]
               },{
                 itemId: 'app',
@@ -173,7 +188,15 @@ Ext.onReady(function(){
                 html: '<div style="padding:5px">Please select a Application</div>',
                 tplMarkup: [
                   'Name: {name}<br/>',
-                  'Short Name: {short_name}<br/>'
+                  'Short Name: {short_name}<br/>',
+                  'Desc: {desc}<br/>'
+                ],
+                bbar: [
+                  {
+                    text: 'Edit',
+                    handler: function() {
+                    }
+                  }
                 ]
               },{
                 itemId: 'environment',
@@ -184,7 +207,15 @@ Ext.onReady(function(){
                 html: '<div style="padding:5px">Please select a Environment</div>',
                 tplMarkup: [
                   'Name: {name}<br/>',
-                  'Short Name: {short_name}<br/>'
+                  'Short Name: {short_name}<br/>',
+                  'Desc: {desc}<br/>'
+                ],
+                bbar: [
+                  {
+                    text: 'Edit',
+                    handler: function() {
+                    }
+                  }
                 ]
               }
             ]

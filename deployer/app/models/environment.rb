@@ -5,6 +5,9 @@ class Environment < ActiveRecord::Base
     has_many :accesses, :as => :accessable
     has_one :deploy_process
 
+    validates_uniqueness_of :name, :scope => :app_id
+    validates_uniqueness_of :short_name, :scope => :app_id
+
     def parameters
       if @parameters.nil?
           @parameters =

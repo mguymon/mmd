@@ -16,9 +16,12 @@ module MMD
         
         @environment  = @parameters[:cap_environment] ? @parameters[:cap_environment] : @parameters[:mode]
 
+        # For capistrano multistage deploys, override the stage dir to an absolute path
+        @parameters[:stage_dir] = "#{@parameters[:checkout_path]}/config/deploy"
+
         @override_vars = get_options_from_global_parameters(
           [ [:cap_username, :username], [:cap_password, :password], [:scm_repository, :repository], :scm, :scm_username, :scm_password,
-            :production_database, :production_dbhost, :dbuser, :dbpass ], @parameters )
+            :production_database, :production_dbhost, :dbuser, :dbpass, :stage_dir ], @parameters )
 
         if @options[:deploy_file]
           @deploy_file = File.join( @parameters[:checkout_path], @options[:deploy_file] )
@@ -72,7 +75,7 @@ module MMD
       end
 
       def execute!
-        config = instantiate_configuration
+        config = instantiate_configuration(@checkout_path)
         set_pre_vars(config)
         config.override_enabled = true
 
@@ -94,10 +97,13 @@ module MMD
         execute_requested_actions(config)
         config.trigger(:exit)
         config.override_enabled = false
+      rescue Exception => error
+        handle_error(error)
       end
 
-      def instantiate_configuration
-        config = MMDisatranoConfiguration.new
+      def instantiate_configuration(checkout_path, options={})
+        config = MMDisatranoConfiguration.new(options)
+        config.checkout_path = checkout_path
         config.instance_variable_set( :@logger, Logger.new(@logger) )
         config.override_vars = @options[:pre_vars]
 
@@ -109,7 +115,8 @@ module MMD
     # a lockdown for MMD deploy parameters
     class MMDisatranoConfiguration < Capistrano::Configuration
       attr_accessor :override_vars
-      attr_accessor :override_enabled     
+      attr_accessor :override_enabled
+      attr_accessor :checkout_path
      
       # Set a variable to the given value.
       def set(variable, *args, &block)
@@ -131,6 +138,38 @@ module MMD
           value = args.empty? ? block : args.first
           sym = variable.to_sym
           protect(sym) { @variables[sym] = value }
+        end
+      end
+
+      def load(*args, &block)
+        options = args.last.is_a?(Hash) ? args.pop : {}
+
+        if block
+          raise ArgumentError, "loading a block requires 0 arguments" unless options.empty? && args.empty?
+          load(:proc => block)
+
+        elsif args.any?
+          args.each { |arg| load options.merge(:file => arg) }
+
+        elsif options[:file]
+          file = options[:file]
+
+          # If a relative file load was set to an absolute path to the checkout
+          # check to see if the .rb needs to be appended.
+          file += ".rb" if file =~ /^#{@checkout_path}/ && (file =~ /[.]rb$/).nil?
+
+          load_from_file(file, options[:name])
+
+        elsif options[:string]
+          remember_load(options) unless options[:reloading]
+          instance_eval(options[:string], options[:name] || "<eval>")
+
+        elsif options[:proc]
+          remember_load(options) unless options[:reloading]
+          instance_eval(&options[:proc])
+
+        else
+          raise ArgumentError, "don't know how to load #{options.inspect}"
         end
       end
     end
