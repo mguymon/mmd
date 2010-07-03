@@ -26,13 +26,28 @@ module MMD
 
               elsif cmd.is_a? Exec
                 channel = ssh.open_channel do |ch|
+
+                  if cmd.is_sudo
+                    channel.request_pty do |ch, success|
+                      raise "Could not obtain pty" if !success
+                    end
+                  end
+
                   @logger.info "Exec #{cmd.cmd}"
                   ch.exec cmd.cmd do |ch, success|
                     raise "could not execute command: #{cmd.cmd}" unless success
 
                     # "on_data" is called when the process writes something to stdout
                     ch.on_data do |c, data|
-                      @logger.info data
+
+                      # pass in password for sudo request
+                      if cmd.is_sudo && cmd.password_sent != true && data =~ /password:/i
+                        ch.send_data "#{@password}\n"
+                        cmd.password_sent = true
+                      else
+                        @logger.info data
+                      end
+
                     end
 
                     # "on_extended_data" is called when the process writes something to stderr
@@ -53,6 +68,10 @@ module MMD
 
       def exec( cmd )
         @cmds << Exec.new( cmd )
+      end
+
+      def sudo_exec( cmd )
+        @cmds << Exec.new( "sudo #{cmd}", :sudo => true )
       end
 
       def upload( file, upload_to )
@@ -82,9 +101,16 @@ module MMD
       end
 
       class Exec
-        attr_reader :cmd
-        def initialize( cmd )
+        attr_reader :cmd, :is_sudo
+        attr_accessor :password_sent
+        def initialize( cmd, options = {} )
           @cmd =cmd
+
+          if options[:sudo] == true
+            @is_sudo = true
+          else
+            @is_sudo = false
+          end
         end
       end
     end
