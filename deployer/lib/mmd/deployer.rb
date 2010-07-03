@@ -27,10 +27,11 @@ module MMD
 
     def onError( exception )
       super
-      @logger.error( "Error: #{$!}" )
+      @logger.error( "Error: #{exception.toString()}" )
       if @deploy_process != nil
         begin
           @deploy_dao.deleteDeployProcessByDeployId( @deploy_id )
+          @deploy_dao.updateCompletedDeploy( @deploy_id, false, "Error on deploy: #{exception.inspect}" )
           @logger.debug( "Deleted DeployProcess for environment id: #{@environment_id}")
         rescue
           @logger.error( "Failed remove old DeployProcess for environment id #{@environment_id}, will block this environment until removed: #{$!}")

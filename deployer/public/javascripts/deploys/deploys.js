@@ -115,13 +115,13 @@ Ext.onReady(function(){
 
   MMD.Deploys.layout = new Ext.Panel({
     title: 'Deploys',
+    id: 'deploys',
     itemId: 'deploys',
     layout: 'border',
     items: [
       {
         title: 'Area',
         region: 'west',
-        fitToFrame:true,
         collapsible: true,
         layout: {
             type:'vbox',
@@ -141,6 +141,7 @@ Ext.onReady(function(){
           {
             itemId: 'columns',
             layout:'column',
+            height: 200,
             items: [
               {
                 itemId: 'client',
@@ -221,7 +222,9 @@ Ext.onReady(function(){
             ]
           }, {
             title: 'Deploy',
-            layout: 'fit'
+            itemId: 'deploy',
+            height: 350,
+            autoScroll: true
           }
         ]
       },{
@@ -256,59 +259,44 @@ MMD.Deploys.getColumn = function( type ) {
 }
 
 var cooldown = 1.0
-MMD.Deploys.fetchNext = function(e,href) {
-	$.getJSON(
-		href,
-    {start: e.fetchedBytes, deploy_id: e.deploy_id},
-    function(data) {
-      // append text and do autoscroll if applicable
+var fetchNextRunning = false;
+MMD.Deploys.fetchNext = function(start, deploy_id) {
+  if ( fetchNextRunning == false ) {
+    fetchNextRunning = true;
+    $.getJSON(
+      '/deploys/' + deploy_id + '.json',
+      {
+        start: start
+      },
+      function(data) {
+        fetchNextRunning = false;
 
-      // determine if the scroll is 'sticky' to the bottom
-      var south_panel = $('#south').parents()[0];
-      var scrollHeight = south_panel.scrollHeight
-      var clientHeight = south_panel.clientHeight
-      var scrollTop = south_panel.scrollTop
-      var diff = scrollHeight - scrollTop - clientHeight;
-      var isSticky = false;
-      if (  diff < 100 ) {
-        isSticky = true;
-      }
-
-
-          var content = data.content;
-          if( content.length > 0 ) {
-            for (var i=0;i<content.length;i++) {
-              e.appendChild(document.createTextNode(content[i] + '\n'));
-            }
-            //if(stickToBottom) scroller.scrollToBottom();
-
-            // Determine scroll offset
-            var divOffset = $('#south').offset().top;
-        var offset = $('#indicator').offset().top;
-        var diff = offset - divOffset;
-        if ( isSticky ) {
-              $('#south').parents().animate({scrollTop: '+=' + diff + 'px'}, 800 );
-            }
-
-            cooldown = 1;
-          } else {
-            cooldown = cooldown + 0.3;
+        var content = data.content;
+        if( content.length > 0 ) {
+          for (var i=0;i<content.length;i++) {
+            cmp = Ext.getCmp('deploys').get('center').get('deploy');
+            var old = cmp.body.dom.innerHTML;
+            cmp.body.update(old + content[i].replace(/\n/, '<br />') );
+            cmp.body.scroll( 'b', 350 );
           }
 
-          //if ( data.error_msg != 'False' ) {
-          //	e.appendChild(document.createTextNode(data.error_msg + '\n'));
-          //}
+          cooldown = 1;
+        } else {
+          cooldown = cooldown + 0.3;
+        }
 
-        e.fetchedBytes = data.end_pos;
+
         if(data.is_running == true) {
-          setTimeout(function(){fetchNext(e,href);},2000 * cooldown);
-        }	else {
-          $('#' + e.indicator).empty();
-          $('#status')[0].innerHTML='Finished';
+          setTimeout(function(){
+              MMD.Deploys.fetchNext(data.end_pos, deploy_id);
+            },
+            2000 * cooldown );
         }
       }
-	 );
-};
+    );
+  }
+}
+
 
 MMD.Deploys.deployButton = function() {
   return {
@@ -317,29 +305,15 @@ MMD.Deploys.deployButton = function() {
     width: 75,
     listeners: {
       'click':  function(field, newVal){
+          Ext.getCmp('deploys').get('center').get('deploy').update( '' );
+          
           Ext.Ajax.request({
             url : '/clients/' + MMD.Deploys.client_id + '/projects/' + MMD.Deploys.project_id + '/applications/' + MMD.Deploys.app_id + '/environments/' + MMD.Deploys.environment_id + '/deploys.json',
             method: 'POST',
             success: function ( result, request ) {
-              var app = Ext.util.JSON.decode(result.responseText);
+              var deploy = Ext.util.JSON.decode(result.responseText);
 
-              Ext.Ajax.request({
-                  url : '/status/' + app.deploy.id + '/',
-                  method: 'POST',
-                  success: function ( result, request ) {
-                    status_html = result.responseText;
-                    $('#deploy_execution').html( status_html );
-                    var results = $("#results")[0];
-                    results.fetchedBytes = 0;
-                    results.deploy_id = app.deploy.id;
-                    results.indicator = 'indicator';
-                    fetchNext(results,"/results/");
-
-                  },
-                  failure: function ( result, request) {
-                    Ext.MessageBox.alert('Failed', result.responseText);
-                  }
-              });
+              MMD.Deploys.fetchNext(0, deploy.id );
 
             },
             failure: function ( result, request) {

@@ -53,6 +53,9 @@ class DeploysController < ApplicationController
                   xml.progressive_log log
               end)
           end
+          format.json do
+            render :json => @deploy.attributes.to_json
+          end
         end
     end
 
@@ -75,6 +78,10 @@ class DeploysController < ApplicationController
                   xml.log_end start + log.size
                   xml.progressive_log log
               end)
+          end
+
+          format.json do
+            render :json => @deploy.attributes.merge(:content => log, :end_pos => start + log.size).to_json
           end
         end
     end
