@@ -18,7 +18,7 @@ public class AntCallTest {
   @Test
   public void testRunTask() {
     String task = "test";
-    AntCall instance = new AntCall( "src/test/resources/build.xml" );
+    AntCall instance = new AntCall( "target", "src/test/resources/build.xml" );
 
     try {
       instance.runTask( task );

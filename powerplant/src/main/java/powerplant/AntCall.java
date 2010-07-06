@@ -21,15 +21,19 @@ public class AntCall {
 
   private Log log = LogFactory.getLog( this.getClass() );
   private String buildXML;
+  private String baseDir;
 
-  public AntCall( String buildXML ) {
+  public AntCall( String baseDir, String buildXML ) {
+    this.baseDir = baseDir;
     this.buildXML = buildXML;
   }
 
   public void runTask( String task ) throws AntException {
     File buildFile = new File( this.buildXML );
+    File buildDir = new File( this.baseDir );
     Project project = new Project();
     try {
+      project.setBaseDir( buildDir );
       project.addBuildListener( new Log4jListener() );
       project.setUserProperty("ant.file", buildFile.getAbsolutePath());
       project.init();
