@@ -36,10 +36,6 @@ module MMD
 
         @capistrano_config = config
 
-        @logger.info config.inspect
-        @logger.info Thread.current[:capistrano_configuration].inspect
-        @logger.info Thread.current[:capistrano_current_feature].inspect
-
         set_pre_vars(config)
         config.override_enabled = true
 
