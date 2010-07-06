@@ -20,7 +20,7 @@ describe DeploysController do
     project = app.project
     client = project.client
 
-    deploy_path = File.join( MMD::Option.workspace, client.short_name, project.short_name, app.short_name, enviro.short_name )
+    deploy_path = File.join( MMD::Option.workspace, client.short_name, project.short_name, app.short_name, enviro.name )
 
     MMD::Option.should_receive(:should_use_threads).and_return( false )
 
@@ -64,7 +64,7 @@ describe DeploysController do
     project = app.project
     client = project.client
     
-    test_file = File.join( MMD::Option.workspace, client.short_name, project.short_name, app.short_name, enviro.short_name, "checkout", "test.txt3" )
+    test_file = File.join( MMD::Option.workspace, client.short_name, project.short_name, app.short_name, enviro.name, "checkout", "test.txt3" )
     File.exists?( test_file ).should eql(true)
 
   end

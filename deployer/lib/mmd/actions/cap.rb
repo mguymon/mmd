@@ -28,7 +28,7 @@ module MMD
         if @options[:deploy_file]
           @deploy_files = ["#{@parameters[:checkout_path]}/#{@options[:deploy_file]}"]
         else
-          @deploy_files = ["#{@parameters[:checkout_path]}/config/deploy"]
+          @deploy_files = ["#{@parameters[:checkout_path]}/config/deploy.rb"]
         end
 
         #@mmdistrano = MMDisatranoCLI.new( @parameters[:checkout_path], @logger, @deploy_files, [@environment], [], @override_vars )

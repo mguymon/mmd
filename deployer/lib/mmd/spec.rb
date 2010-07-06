@@ -1,4 +1,5 @@
 require 'mmd/lifecycle'
+require 'mmd/logger'
 
 module MMD
   class Spec

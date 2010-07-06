@@ -25,7 +25,9 @@ module MMD
         def initialize(name, spec, options = {}, &block)
             @name = name
             @spec = spec
-            @parameters    = @spec.parameters
+            @timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S')
+            @parameters = @spec.parameters
+            @parameters[:timestamp] = @timestamp
             @logger = MMD::Logger.for_log_file( "MMD::Lifecycle", @parameters[:log_file] )
             @deploy_path   = @spec.deploy_path
             @checkout_path = @spec.checkout_path

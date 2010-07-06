@@ -13,12 +13,10 @@ module MMD
       @deploy_id = deploy.id
       @deploy_path = deploy.path
       @name        = deploy.environment.name
-      @short_name  = deploy.environment.short_name
       @mode        = deploy.environment.deployment_mode      
       @deploy_dao = getBean( 'deployDAO' );
 
       parameters[:name]        = @name
-      parameters[:short_name]  = @short_name
       parameters[:mode]        = @mode
       parameters[:log_file]    = @log_file
       parameters[:deploy_path] = @deploy_path
@@ -139,7 +137,7 @@ module MMD
             Dir.mkdir( app_dir )
         end
 
-        deploy_dir = File.join( app_dir, environment.short_name )
+        deploy_dir = File.join( app_dir, environment.name )
         deploy_path = File.expand_path( deploy_dir )
         if not File.exists?( deploy_path ) and create
             Dir.mkdir( deploy_path )

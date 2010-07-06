@@ -20,7 +20,6 @@ module FixtureReplacement
 
     attributes_for :environment do |a|
         a.name       = String.random
-        a.short_name = String.random
         a.desc       = String.random
         a.deployment_mode = "testing"
         a.is_production = false

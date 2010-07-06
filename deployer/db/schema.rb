@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100626011105) do
+ActiveRecord::Schema.define(:version => 20100705153856) do
 
   create_table "accesses", :force => true do |t|
     t.integer "accessor_id",                                    :null => false
@@ -98,7 +98,6 @@ ActiveRecord::Schema.define(:version => 20100626011105) do
 
   create_table "environments", :force => true do |t|
     t.string  "name",            :limit => 50,  :default => "",    :null => false
-    t.string  "short_name",      :limit => 10,  :default => "",    :null => false
     t.string  "deployment_mode", :limit => 100, :default => "",    :null => false
     t.string  "desc",            :limit => 200, :default => "",    :null => false
     t.boolean "is_production",                  :default => false, :null => false
@@ -106,7 +105,6 @@ ActiveRecord::Schema.define(:version => 20100626011105) do
   end
 
   add_index "environments", ["name"], :name => "index_environments_on_name_and_id", :unique => true
-  add_index "environments", ["short_name"], :name => "index_environments_on_short_name_and_id", :unique => true
 
   create_table "groups", :force => true do |t|
     t.string "name", :limit => 50,  :default => "", :null => false

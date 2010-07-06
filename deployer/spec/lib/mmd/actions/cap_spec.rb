@@ -26,12 +26,9 @@ describe MMD::Actions::Cap do
     source_manager = MMD::SourceManager.new(:subversion, parameters )
     source_manager.checkout
     parameters[:checkout_path] = source_manager.checkout_path
-
-    logger = mock("logger", :null_object => true)
-    MMD::Actions::Logger.stub!(:new).and_return( logger )
-    logger.should_receive(:info).with( "username cannot be overridden" )
-
+    
     @action = MMD::Action.new( :cap, parameters, :file => 'deploy.rb' ) do
+      task 'staging'
       task 'mmd:echo'
     end
     @action.execute
