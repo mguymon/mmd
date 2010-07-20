@@ -16,10 +16,10 @@ Rails::Initializer.run do |config|
 
   # Specify gems that this application depends on and have them installed with rake gems:install
   config.gem 'log4r'
-  #config.gem 'jruby-openssl'
-  #config.gem "net-ssh"
-  #config.gem 'net-scp'
-  #config.gem 'capistrano'
+  config.gem 'jruby-openssl', :lib => 'openssl'
+  config.gem "net-ssh", :lib => 'net/ssh'
+  config.gem 'net-scp', :lib => 'net/scp'
+  config.gem 'capistrano'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
