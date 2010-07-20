@@ -2,3 +2,5 @@ target
 workspace
 *.iml
 .idea
+deployer.war
+config/database.yml
