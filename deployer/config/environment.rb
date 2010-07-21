@@ -20,6 +20,9 @@ Rails::Initializer.run do |config|
   config.gem "net-ssh", :lib => 'net/ssh'
   config.gem 'net-scp', :lib => 'net/scp'
   config.gem 'capistrano'
+  #config.gem 'activerecord-jdbcmysql-adapter', :lib => 'active_record/connection_adapters/jdbcmysql_adapter'
+  config.gem 'jruby-rack', :version => '1.0.1'
+  config.gem 'rack', :version => '1.0.1'
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

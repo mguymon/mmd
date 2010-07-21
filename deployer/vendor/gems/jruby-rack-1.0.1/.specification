@@ -1,0 +1,68 @@
+--- !ruby/object:Gem::Specification 
+name: jruby-rack
+version: !ruby/object:Gem::Version 
+  prerelease: false
+  segments: 
+    - 1
+    - 0
+    - 1
+  version: 1.0.1
+platform: ruby
+authors: 
+  - Nick Sieger
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2010-05-18 00:00:00 -04:00
+default_executable: 
+dependencies: []
+
+description: JRuby-Rack is a combined Java and Ruby library that adapts the Java Servlet API to Rack. For JRuby only.
+email: 
+  - nick@nicksieger.com
+executables: []
+
+extensions: []
+
+extra_rdoc_files: []
+
+files: 
+  - ./History.txt
+  - ./LICENSE.txt
+  - ./README.md
+  - ./lib/jruby-rack-1.0.1.jar
+  - ./lib/jruby-rack.rb
+  - ./lib/jruby/rack/version.rb
+has_rdoc: true
+homepage: http://jruby.org
+licenses: []
+
+post_install_message: 
+rdoc_options: []
+
+require_paths: 
+  - lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        segments: 
+          - 0
+        version: "0"
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        segments: 
+          - 0
+        version: "0"
+requirements: []
+
+rubyforge_project: jruby-extras
+rubygems_version: 1.3.6
+signing_key: 
+specification_version: 3
+summary: Rack adapter for JRuby and Servlet Containers
+test_files: []
+

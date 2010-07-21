@@ -22,7 +22,7 @@ Ext.onReady(function() {
       {
         region: 'north',
         xtype: 'panel',
-        title: '<span style="font-size:120%">SpreadEm</span>'
+        title: '<span style="font-size:120%">Mighty Mighty Deployer</span>'
       },
       {
         region: 'center',
