@@ -164,7 +164,8 @@ def mmd_get( request_type, uri, cookie, params = {}, return_response = false )
     if response =~ /<#{request_type}s type="array">/
       doc = REXML::Document.new( response )
       doc.elements.each("#{request_type}s/#{request_type}") do |ele|
-        choices[ele.text('short-name')] = ele.text('id')
+        # HACK since environment no longer has a snort name
+        choices[ele.text('short-name')||ele.text('name')] = ele.text('id')
       end
     else
       say("ERROR: Mighty Mighty Deployer returned unexpected result")
@@ -277,7 +278,7 @@ if environment_id == nil
       if response =~ /<environments type="array">/
         doc = REXML::Document.new( response )
         doc.elements.each("environments/environment") do |ele|
-          environments[ele.text('short-name')] = ele.text('id')
+          environments[ele.text('name')] = ele.text('id')
         end
       else
         say("ERROR: Mighty Mighty Deployer returned unexpected result")
