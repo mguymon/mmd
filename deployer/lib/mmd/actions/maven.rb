@@ -13,7 +13,6 @@ module MMD
           IO.popen( "cd #{@checkout_path} && mvn -Dmaven.test.skip=true #{goal}" ) do |pipe|
             pipe.sync = true
             while msg = pipe.gets
-                output << msg
                 @logger.info( "  #{msg.strip()}" )
             end
           end
