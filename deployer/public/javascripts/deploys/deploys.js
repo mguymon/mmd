@@ -332,7 +332,7 @@ MMD.Deploys.fetchNext = function(start, deploy_id) {
           setTimeout(function(){
               MMD.Deploys.fetchNext(data.end_pos, deploy_id);
             },
-            2000 * cooldown );
+            9000 * cooldown );
         }
       }
     );
