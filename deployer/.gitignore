@@ -4,3 +4,4 @@ workspace
 .idea
 deployer.war
 config/database.yml
+config/deploy.rb

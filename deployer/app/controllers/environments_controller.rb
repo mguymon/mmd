@@ -1,3 +1,5 @@
+require 'mmd/template'
+
 class EnvironmentsController < ApplicationController
     before_filter :login_required
     
@@ -47,7 +49,10 @@ class EnvironmentsController < ApplicationController
             format.html { render :file => "environments/index.json.erb", :use_full_path => true }
             format.xml { render( :xml => @environment.to_xml( :include => { :deploy_process => {:include => :deploy} } ) ) }
             format.json do
-              render :json => { :success => true, :record => @environment.attributes }.to_json
+              attributes = @environment.attributes
+              attributes['environment_templates'] = @environment.environment_templates.map { |template| template.attributes }
+              attributes['allowed_templates'] = MMD::Template.constants
+              render :json => { :success => true, :record => attributes }.to_json
             end
         end
     end

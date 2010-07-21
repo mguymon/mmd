@@ -11,4 +11,4 @@ test:
 production:
   scripts: <%= RAILS_ROOT %>/script
   workspace: <%= RAILS_ROOT %>/workspace/prod
-  should_use_threads: false
+  should_use_threads: true

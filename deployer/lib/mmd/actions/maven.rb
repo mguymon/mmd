@@ -14,7 +14,7 @@ module MMD
         end
       end
 
-      def goal( task, opts = {} )
+      def goal( goal, opts = {} )
 
         @goals << goal
       end

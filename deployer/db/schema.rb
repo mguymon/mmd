@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100705153856) do
+ActiveRecord::Schema.define(:version => 20100721172138) do
 
   create_table "accesses", :force => true do |t|
     t.integer "accessor_id",                                    :null => false
@@ -95,6 +95,12 @@ ActiveRecord::Schema.define(:version => 20100705153856) do
   end
 
   add_index "environment_parameters", ["environment_id"], :name => "index_environment_parameters_on_environment_id"
+
+  create_table "environment_templates", :force => true do |t|
+    t.string  "name"
+    t.string  "include"
+    t.integer "environment_id"
+  end
 
   create_table "environments", :force => true do |t|
     t.string  "name",            :limit => 50,  :default => "",    :null => false
