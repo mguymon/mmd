@@ -18,7 +18,21 @@ class ProjectsController < ApplicationController
 
     # POST 
     def create
-      # create an account
+      @project = Project.new(params[:project])
+
+      if @project.save
+        respond_to do |format|
+          format.json do
+            render :json => { :success => true, :id => @project.id}.to_json
+          end
+        end
+      else
+        respond_to do |format|
+          format.json do
+            render :json => { :success => false, :errors => @project.errors.full_messages }.to_json
+          end
+        end
+      end
     end
 
     # GET 

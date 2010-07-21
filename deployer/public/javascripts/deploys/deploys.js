@@ -1,21 +1,13 @@
 Ext.ns('MMD', 'MMD.Deploys', 'MMD.Deploys.Store');
 
-MMD.Deploys.Store.blueprints =
-  new MMD.Store( 'blueprints', 'id',
-    [
-      {name: 'id', type: 'int'},
-      {name: 'name'},
-      {name: 'material_efficiency'},
-      {name: 'time_efficiency'},
-      {name: 'created_at', type: 'date', dateFormat: 'c'}
-    ],
-    {
-      proxy: new Ext.data.HttpProxy({url: '/blueprints', method: 'GET'})
-    });
-
 Ext.onReady(function(){
 
-  clientsTree = new Ext.tree.TreePanel({
+  MMD.Deploys.treeLoader = new Ext.tree.TreeLoader({
+      dataUrl:'/clients.json',
+      requestMethod: 'GET'
+    })
+
+  MMD.Deploys.clientTree = new Ext.tree.TreePanel({
     id: 'clients-tree-panel',
     autoScroll: true,
     width: 170,
@@ -27,23 +19,20 @@ Ext.onReady(function(){
     lines: false,
     useArrows:true,
     rootVisible: false,
-    loader: new Ext.tree.TreeLoader({
-      dataUrl:'/clients.json',
-      requestMethod: 'GET'
-    }),
+    loader: MMD.Deploys.treeLoader,
 
     root: new Ext.tree.AsyncTreeNode( { id: 'clients' } )
   });
 
-  clientsTree.on('beforeexpandnode', function(node, deep, anim ) {
+  MMD.Deploys.clientTree.on('beforeexpandnode', function(node, deep, anim ) {
     // Collapse all nodes if client is changed
     attributes =  node.attributes;
-    if ( attributes.recordType == 'client' && MMD.Deploys.client_id != attributes.recordId ) {
-      clientsTree.collapseAll();
+    if ( attributes.recordType == 'client' && MMD.Deploys.clientId != attributes.recordId ) {
+      MMD.Deploys.clientTree.collapseAll();
     }
   });
 
-  clientsTree.on('expandnode', function(node, deep, anim ) {
+  MMD.Deploys.clientTree.on('expandnode', function(node, deep, anim ) {
 
     id = node.attributes.recordId;
     type = node.attributes.recordType;
@@ -62,16 +51,16 @@ Ext.onReady(function(){
             }
 
             if ( type == 'client' ) {
-              MMD.Deploys.client_id = id;
+              MMD.Deploys.clientId = id;
               MMD.Deploys.getColumn( 'project' ).resetDetail();
               MMD.Deploys.getColumn( 'app' ).resetDetail();
               MMD.Deploys.getColumn( 'environment' ).resetDetail();
             } else if ( type == 'project' ) {
-              MMD.Deploys.project_id = id;
+              MMD.Deploys.projectId = id;
               MMD.Deploys.getColumn( 'app' ).resetDetail();
               MMD.Deploys.getColumn( 'environment' ).resetDetail();
             } else if ( type == 'app' ) {
-              MMD.Deploys.app_id = id;
+              MMD.Deploys.appId = id;
               MMD.Deploys.getColumn( 'environment' ).resetDetail();
             }
           },
@@ -83,12 +72,12 @@ Ext.onReady(function(){
 
   });
 
-  clientsTree.on('click', function(node, event ) {
+  MMD.Deploys.clientTree.on('click', function(node, event ) {
     id = node.attributes.recordId;
     type = node.attributes.recordType;
 
     if ( type == 'environment' && id !== undefined ) {
-      MMD.Deploys.environment_id = id;
+      MMD.Deploys.environmentId = id;
 
       var conn = new Ext.data.Connection();
       conn.request({
@@ -103,6 +92,26 @@ Ext.onReady(function(){
               actionPanel = MMD.Deploys.cleanUpActionPanel();
               actionPanel.add( MMD.Deploys.deployButton() );
               actionPanel.doLayout();
+            }
+          },
+          failure: function ( result, request) {
+            Ext.MessageBox.alert('Status', 'Failed to retrieve ' + type + ' data');
+          }
+      });
+
+    } else if ( id !== undefined ) {
+      MMD.Deploys[type + 'Id'] = id;
+
+      var conn = new Ext.data.Connection();
+      conn.request({
+          url: '/' + type + 's/' + id + '.json',
+          method: 'POST',
+          params: { '_method': 'GET' },
+          success: function(response, action) {
+            result = Ext.util.JSON.decode(response.responseText);
+
+            if ( result.success ) {
+              MMD.Deploys.getColumn( type).updateDetail( result.record );
             }
           },
           failure: function ( result, request) {
@@ -131,7 +140,7 @@ Ext.onReady(function(){
         defaults:{margins:'0 0 5 0'},
         width: 180,
         items: [
-          clientsTree
+          MMD.Deploys.clientTree
         ]
       },{
         xtype: 'panel',
@@ -159,6 +168,14 @@ Ext.onReady(function(){
                     text: 'Edit',
                     handler: function() {
                     }
+                  },
+                  '-',
+                  {
+                    text: 'Add Project',
+                    handler: function(detail) {
+                      popup = new MMD.Deploys.Windows.Project( {clientId: MMD.Deploys.clientId });
+                      popup.show();
+                    }
                   }
                 ]
               },{
@@ -178,6 +195,14 @@ Ext.onReady(function(){
                     text: 'Edit',
                     handler: function() {
                     }
+                  },
+                  '-',
+                  {
+                    text: 'Add Application',
+                    handler: function(detail) {
+                      popup = new MMD.Deploys.Windows.App( {projectId: MMD.Deploys.projectId });
+                      popup.show();
+                    }
                   }
                 ]
               },{
@@ -196,6 +221,14 @@ Ext.onReady(function(){
                   {
                     text: 'Edit',
                     handler: function() {
+                    }
+                  },
+                  '-',
+                  {
+                    text: 'Add Environment',
+                    handler: function(detail) {
+                      popup = new MMD.Deploys.Windows.Environment( {appId: MMD.Deploys.appId });
+                      popup.show();
                     }
                   }
                 ]
@@ -246,7 +279,16 @@ Ext.onReady(function(){
         itemId: 'south',
         region: 'south',
         height: 30,
-        xtype: 'toolbar'
+        xtype: 'toolbar',
+        items: [
+          {
+              text: 'Add Client',
+              handler: function() {
+                  popup = new MMD.Deploys.Windows.Client();
+                  popup.show();
+              }
+          }
+        ]
       }
     ]
   });
@@ -308,7 +350,7 @@ MMD.Deploys.deployButton = function() {
           Ext.getCmp('deploys').get('center').get('deploy').update( '' );
           
           Ext.Ajax.request({
-            url : '/clients/' + MMD.Deploys.client_id + '/projects/' + MMD.Deploys.project_id + '/applications/' + MMD.Deploys.app_id + '/environments/' + MMD.Deploys.environment_id + '/deploys.json',
+            url : '/clients/' + MMD.Deploys.clientId + '/projects/' + MMD.Deploys.projectId + '/applications/' + MMD.Deploys.appId + '/environments/' + MMD.Deploys.environmentId + '/deploys.json',
             method: 'POST',
             success: function ( result, request ) {
               var deploy = Ext.util.JSON.decode(result.responseText);

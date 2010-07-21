@@ -36,6 +36,21 @@ class ClientsController < ApplicationController
     # POST 
     def create
       # create an account
+      @client = Client.new(params[:client])
+
+      if @client.save
+        respond_to do |format|
+          format.json do
+            render :json => { :success => true, :id => @client.id}.to_json
+          end
+        end
+      else
+        respond_to do |format|
+          format.json do
+            render :json => { :success => false, :errors => @client.errors.full_messages }.to_json
+          end
+        end
+      end
     end
 
     # GET 

@@ -18,7 +18,21 @@ class AppsController < ApplicationController
 
     # POST 
     def create
-      # create an account
+      @application = App.new(params[:app])
+
+      if @application.save
+        respond_to do |format|
+          format.json do
+            render :json => { :success => true, :id => @application.id}.to_json
+          end
+        end
+      else
+        respond_to do |format|
+          format.json do
+            render :json => { :success => false, :errors => @application.errors.full_messages }.to_json
+          end
+        end
+      end
     end
 
     # GET 

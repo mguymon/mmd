@@ -23,7 +23,21 @@ class EnvironmentsController < ApplicationController
 
     # POST
     def create
-        # create an account
+      @environment = Environment.new(params[:environment])
+
+      if @environment.save
+        respond_to do |format|
+          format.json do
+            render :json => { :success => true, :id => @environment.id}.to_json
+          end
+        end
+      else
+        respond_to do |format|
+          format.json do
+            render :json => { :success => false, :errors => @environment.errors.full_messages }.to_json
+          end
+        end
+      end
     end
 
     # GET

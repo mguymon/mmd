@@ -5,6 +5,7 @@ class Environment < ActiveRecord::Base
   has_many :accesses, :as => :accessable
   has_one :deploy_process
 
+  validates_presence_of :name
   validates_uniqueness_of :name, :scope => :app_id
   validates_presence_of :deployment_mode
   
