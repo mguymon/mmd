@@ -10,7 +10,13 @@ module MMD
 
       def action
         @goals.each do |goal|
-          `cd #{@checkout_path} && mvn -Dmaven.test.skip=true #{goal}`
+          IO.popen( "cd #{@checkout_path} && mvn -Dmaven.test.skip=true #{goal}" ) do |pipe|
+            pipe.sync = true
+            while msg = pipe.gets
+                output << msg
+                @logger.info( "  #{msg.strip()}" )
+            end
+          end
         end
       end
 
