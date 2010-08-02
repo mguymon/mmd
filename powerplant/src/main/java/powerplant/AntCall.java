@@ -2,11 +2,9 @@ package powerplant;
 
 import java.io.File;
 
-// Apache Common Logging
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 // Apache Ant
+import java.io.IOException;
+import org.apache.log4j.Logger;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
@@ -19,13 +17,15 @@ import org.apache.tools.ant.listener.Log4jListener;
  */
 public class AntCall {
 
-  private Log log = LogFactory.getLog( this.getClass() );
   private String buildXML;
   private String baseDir;
+  private Logger log;
 
-  public AntCall( String baseDir, String buildXML ) {
+  public AntCall( String baseDir, String buildXML, String logFile ) throws IOException {
     this.baseDir = baseDir;
     this.buildXML = buildXML;
+
+    log = LogHelper.getLog( this.getClass(), logFile );
   }
 
   public void runTask( String task ) throws AntException {

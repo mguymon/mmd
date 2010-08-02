@@ -11,6 +11,7 @@ public class AntException extends Exception {
      * Creates a new instance of <code>AntException</code> without detail message.
      */
     public AntException() {
+      super();
     }
 
 

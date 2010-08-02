@@ -28,5 +28,7 @@ public interface Deployable {
 	 * Called after beforeStart
 	 */
 	public void execute();
+
+  public String getLogFile();
 	
 }

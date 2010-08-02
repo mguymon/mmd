@@ -1,7 +1,11 @@
 package powerplant.deploy;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import powerplant.LogHelper;
+
 
 
 /**
@@ -13,10 +17,11 @@ import org.apache.commons.logging.LogFactory;
  */
 public class LiveWire extends Thread {
 
-	private Log log = LogFactory.getLog( this.getClass() );
+	private Logger log = null;
 	Deployable deployable;
 	
-	public LiveWire( Deployable deployable ) {
+	public LiveWire( Deployable deployable ) throws IOException {
+    log = LogHelper.getLog( this.getClass(), deployable.getLogFile() );
 		this.deployable = deployable;
 	}
 	
