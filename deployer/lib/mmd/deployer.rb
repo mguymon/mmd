@@ -23,6 +23,10 @@ module MMD
       @parameters = parameters
     end
 
+    def getLogFile
+      @log_file
+    end
+
     def onError( exception )
       super
       @logger.error( "Error: #{exception.toString()}" )

@@ -74,14 +74,14 @@ class DeploysController < ApplicationController
           format.html
           format.xml  do
               render :xml => (@deploy.to_xml( :except => [:log_file] ) do |xml|
-                  xml.log_start 0
+                  xml.log_start start
                   xml.log_end start + log.size
                   xml.progressive_log log
               end)
           end
 
           format.json do
-            render :json => @deploy.attributes.merge(:content => log, :end_pos => start + log.size).to_json
+            render :json => @deploy.attributes.merge(:content => log, :end_pos => start + log.size, :start_pos => start).to_json
           end
         end
     end

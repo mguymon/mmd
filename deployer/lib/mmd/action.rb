@@ -11,7 +11,8 @@ module MMD
             @options = options
             @block = block
             @parameters = parameters
-            @logger     = MMD::Logger.for_log_file( "MMD::Action::#{name.to_s.camelize}", @parameters[:log_file] )
+            @log_file = @parameters[:log_file]
+            @logger     = MMD::Logger.for_log_file( "MMD::Action::#{name.to_s.camelize}", @log_file )
             @deploy_path = @parameters[:deploy_path]
             @checkout_path = @parameters[:checkout_path]
             @finished = false
