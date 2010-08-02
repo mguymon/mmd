@@ -44,7 +44,7 @@ public class AntCall {
       project.fireBuildFinished(null);
 
     } catch (BuildException buildException) {
-      log.error( "Failed to execute task " + task, buildException );
+      log.error( "Failed to execute task " + task + " " + buildException.toString(), buildException );
       project.fireBuildFinished( buildException );
 
       throw new AntException( "Failed to execute task " + task, buildException );
