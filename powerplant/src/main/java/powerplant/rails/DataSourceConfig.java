@@ -87,7 +87,7 @@ public class DataSourceConfig {
 				log.info("Using System property JNDI Intial Context Factory: " + context_factory);
 				properties.setProperty("java.naming.factory.initial", context_factory);
 			} else {
-				String errorMsg = "ActiveRecord::Base.establish_connection.config or System property ava.naming.factory.initial did not contain initial factory, is jndi_context_factory set in database.yml?";
+				String errorMsg = "Rails database_configuration or System property java.naming.factory.initial did not contain initial factory, is jndi_context_factory set in database.yml?";
 				log.fatal(errorMsg);
 				throw new RuntimeException(errorMsg);
 			}
@@ -107,7 +107,7 @@ public class DataSourceConfig {
 				log.info("Using System property JNDI Provider URL: " + provider_url);
 				properties.setProperty("java.naming.provider.url", provider_url);
 			} else {
-				String errorMsg = "Rails::Configuration database_configuration or System property java.naming.factory.initial did not contain initial factory, is jndi_context_factory set in database.yml?";
+				String errorMsg = "Rails database_configuration or System property java.naming.factory.initial did not contain initial factory, is jndi_context_factory set in database.yml?";
 				log.fatal(errorMsg);
 				throw new RuntimeException(errorMsg);
 			}
@@ -129,7 +129,7 @@ public class DataSourceConfig {
 				
 		String url = ( String )activeRecordConfig.get( "url" );			
 		if ( url == null) {
-      StringBuffer buildUrl = new StringBuffer();
+      StringBuilder buildUrl = new StringBuilder();
       
 			buildUrl.append( "jdbc:mysql://" );
       String host = ( String )activeRecordConfig.get( "host" );
@@ -144,7 +144,10 @@ public class DataSourceConfig {
 
       // Setup autoReconnect for MySQL
       if ( driver.equals("com.mysql.jdbc.Driver") ) {
-        String reconnect = ( String )activeRecordConfig.get( "reconnect" );
+        Object reconnect = activeRecordConfig.get( "reconnect" );
+        if ( reconnect == null ) {
+          reconnect = "true";
+        }
         buildUrl.append("?autoReconnect=").append( !reconnect.equals( "false" ) );
       }
 
