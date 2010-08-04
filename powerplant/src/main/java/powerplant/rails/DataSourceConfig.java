@@ -142,6 +142,12 @@ public class DataSourceConfig {
 
       buildUrl.append( activeRecordConfig.get( "database" ) );
 
+      // Setup autoReconnect for MySQL
+      if ( driver.equals("com.mysql.jdbc.Driver") ) {
+        String reconnect = ( String )activeRecordConfig.get( "reconnect" );
+        buildUrl.append("?autoReconnect=").append( !reconnect.equals( "false" ) );
+      }
+
       url = buildUrl.toString();
 		}
 		
