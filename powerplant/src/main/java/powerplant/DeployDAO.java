@@ -13,6 +13,7 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 //Slackworks Powerplant
+import org.springframework.transaction.CannotCreateTransactionException;
 import powerplant.model.Deploy;
 import powerplant.model.DeployProcess;
 
@@ -23,6 +24,9 @@ import powerplant.model.DeployProcess;
  *
  */
 public class DeployDAO extends HibernateDaoSupport {
+
+  private static ThreadLocal reconnectCheck = new ThreadLocal();
+
 
 	/**
 	 * Get {@link DeployProcess} by Number id
@@ -73,7 +77,16 @@ public class DeployDAO extends HibernateDaoSupport {
 		} catch ( ConstraintViolationException exception ) {
 			this.getSession().clear();
 			throw new DuplicateProcessException( exception );
-		}
+		} catch ( CannotCreateTransactionException exception ) {
+
+      if ( !Boolean.TRUE.equals( reconnectCheck.get() ) ) {
+        DeployerService.setupDataSource();
+        reconnectCheck.set( Boolean.TRUE );
+        createDeployProcess( environment_id, deploy_id );
+      } else {
+        throw exception;
+      }
+    }
 		return deployProcess;
 	}
 	

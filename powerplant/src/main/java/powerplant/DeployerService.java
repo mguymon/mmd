@@ -27,7 +27,8 @@ import powerplant.rails.DataSourceConfig;
  */
 public class DeployerService implements BasicLibraryService {
 	protected static Log log = LogFactory.getLog( DeployerService.class );
-	
+
+  private static DataSourceConfig config;
 	private static DataSource dataSource;
 	
 	public DeployerService() {
@@ -41,11 +42,10 @@ public class DeployerService implements BasicLibraryService {
 	 * Executed by JRuby
 	 */
 	public boolean basicLoad(final Ruby runtime) {
-		if ( log.isInfoEnabled() ) {
+    if ( log.isInfoEnabled() ) {
 			log.info( "Loading Deployer Service" );
 		}
-		
-		DataSourceConfig config = null;
+
 		try {
 			config = new DataSourceConfig( runtime );
 		} catch (NamingException exception) {
@@ -58,7 +58,12 @@ public class DeployerService implements BasicLibraryService {
 			log.fatal( "Failed to load database config from Rails runtime", exception );
 			throw new RuntimeException( "Failed to load database config from Rails runtime", exception );
 		}
-		
+
+		return setupDataSource();
+	}
+
+  public static boolean setupDataSource() {
+    
 		dataSource = config.getDataSource();
 		try {
 			Springleton.loadApplicationContext();
@@ -66,10 +71,10 @@ public class DeployerService implements BasicLibraryService {
 			log.fatal( "Failed to create Spring context", exception );
 			throw new RuntimeException( "Failed to create Spring context", exception );
 		}
-		
-		return true;
-	}
-	
+
+    return true;
+  }
+
 	public static DataSource getDataSource() {
 		return dataSource;
 	}
