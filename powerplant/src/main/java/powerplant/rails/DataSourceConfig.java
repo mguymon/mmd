@@ -148,7 +148,7 @@ public class DataSourceConfig {
         if ( reconnect == null ) {
           reconnect = "true";
         }
-        buildUrl.append("?autoReconnect=").append( !reconnect.equals( "false" ) );
+        buildUrl.append("?autoReconnect=").append( !reconnect.toString().equals( "false" ) );
       }
 
       url = buildUrl.toString();
