@@ -1,8 +1,7 @@
 package powerplant.rails;
 
 // Sun JSE
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.Map;
 import java.util.Properties;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -20,7 +19,6 @@ import org.apache.commons.logging.LogFactory;
 // JRuby
 import org.jruby.Ruby;
 import org.jruby.RubyHash;
-import org.jruby.RubySymbol;
 import org.jruby.runtime.builtin.IRubyObject;
 
 
@@ -68,7 +66,7 @@ public class DataSourceConfig {
 		}
 	}
 
-	private void lookupInJNDI( String jndi, RubyHash activeRecordConfig ) throws NamingException {
+	protected void lookupInJNDI( String jndi, Map activeRecordConfig ) throws NamingException {
 		Properties properties = new Properties();
 
 		// Get initial context factory from ActiveRecord
@@ -118,7 +116,7 @@ public class DataSourceConfig {
 		dataSource = ( DataSource )initial_context.lookup( jndi );
 	}
 	
-	private void buildDataSource( RubyHash activeRecordConfig ) throws ClassNotFoundException {		
+	protected void buildDataSource( Map activeRecordConfig ) throws ClassNotFoundException {
 		String driver = ( String )activeRecordConfig.get( "driver" );
 
     // XXX: hardcoded to mysql
@@ -143,15 +141,15 @@ public class DataSourceConfig {
       buildUrl.append( activeRecordConfig.get( "database" ) );
 
       // Setup autoReconnect for MySQL
-      if ( driver.equals("com.mysql.jdbc.Driver") ) {
-        Object reconnect = activeRecordConfig.get( "reconnect" );
-        if ( reconnect == null ) {
-          reconnect = "true";
-        }
-        buildUrl.append("?autoReconnect=").append( !reconnect.toString().equals( "false" ) );
+      Object reconnect = activeRecordConfig.get( "reconnect" );
+      if ( reconnect == null ) {
+        reconnect = "true";
       }
-
+      buildUrl.append("?autoReconnect=").append( !reconnect.toString().equals( "false" ) );
+      
       url = buildUrl.toString();
+
+      log.info( "JDBC url: " + url );
 		}
 		
 		String username = ( String )activeRecordConfig.get( "username" );		
@@ -162,7 +160,7 @@ public class DataSourceConfig {
 		driver_adapter.setDriver( driver );
 		driver_adapter.setUrl( url );
 		driver_adapter.setPassword( password );
-		driver_adapter.setUser( username );		
+		driver_adapter.setUser( username );
 	
 		if ( log.isDebugEnabled() ) {
 			log.debug( "Created DriverAdapterCPDS for [" + driver  + "] to [" + url + "]" );
@@ -170,6 +168,8 @@ public class DataSourceConfig {
 		
 		SharedPoolDataSource sharedPool = new SharedPoolDataSource();
 		sharedPool.setConnectionPoolDataSource( driver_adapter );
+    sharedPool.setTestOnBorrow( true );
+    sharedPool.setValidationQuery( "SELECT 1 FROM schema_migrations" );
 		
 		if ( log.isDebugEnabled() ) {
 			log.debug( "Created SharedPoolDataSource" );
