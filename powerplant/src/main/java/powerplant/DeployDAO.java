@@ -77,15 +77,6 @@ public class DeployDAO extends HibernateDaoSupport {
 		} catch ( ConstraintViolationException exception ) {
 			this.getSession().clear();
 			throw new DuplicateProcessException( exception );
-		} catch ( CannotCreateTransactionException exception ) {
-
-      if ( !Boolean.TRUE.equals( reconnectCheck.get() ) ) {
-        DeployerService.setupDataSource();
-        reconnectCheck.set( Boolean.TRUE );
-        createDeployProcess( environment_id, deploy_id );
-      } else {
-        throw exception;
-      }
     }
 		return deployProcess;
 	}
