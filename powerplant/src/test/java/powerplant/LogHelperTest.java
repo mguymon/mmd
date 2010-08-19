@@ -1,9 +1,7 @@
 package powerplant;
 
-import powerplant.LogHelper;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
