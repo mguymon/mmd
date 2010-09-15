@@ -2,7 +2,7 @@ module MMD
     class Action
         include Param
         include RequiredParams
-        attr_reader :name, :lifecycle, :deploy_path, :options, :block, :environment, :mode, :finished
+        attr_reader :name, :log_file, :lifecycle, :deploy_path, :options, :block, :environment, :mode, :finished
 
         def initialize(name, parameters, options = {}, &block)
             @name = name
@@ -11,7 +11,7 @@ module MMD
             @options = options
             @block = block
             @parameters = parameters
-            @log_file = @parameters[:log_file]
+            @log_file = @parameters[:log_file] || 'log/powerplant.log'
             @logger     = MMD::Logger.for_log_file( "MMD::Action::#{name.to_s.camelize}", @log_file )
             @deploy_path = @parameters[:deploy_path]
             @checkout_path = @parameters[:checkout_path]
@@ -40,6 +40,7 @@ module MMD
             end
             action if self.respond_to?('action', true)
             after_action if self.respond_to?('after_action', true)
+
             @finished = true
         end
 
