@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100721172138) do
+ActiveRecord::Schema.define(:version => 20100819192940) do
 
   create_table "accesses", :force => true do |t|
     t.integer "accessor_id",                                    :null => false
@@ -129,6 +129,5 @@ ActiveRecord::Schema.define(:version => 20100721172138) do
   end
 
   add_index "projects", ["client_id"], :name => "index_projects_on_client_id"
-  add_index "projects", ["name"], :name => "index_projects_on_name", :unique => true
 
 end
