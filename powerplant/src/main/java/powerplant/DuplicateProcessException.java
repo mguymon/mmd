@@ -1,7 +1,5 @@
 package powerplant;
 
-import powerplant.model.DeployProcess;
-
 /**
  * Exception that an existing deployment is already running
  * 

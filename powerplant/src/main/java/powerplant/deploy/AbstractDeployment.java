@@ -29,18 +29,11 @@ public abstract class AbstractDeployment implements Deployable {
 	protected Log log = LogFactory.getLog( this.getClass() );
 	
 	private static ThreadLocal<RubyHash> CONFIGURATION = new ThreadLocal<RubyHash>() {
-        protected synchronized RubyHash initialValue() {
-            return RubyHash.newHash( Ruby.newInstance() ); 
-        }
-    };
-
-    public static RubyHash getConfiguration() {
-    	return CONFIGURATION.get();
-    }
-    
-    public static void setConfiguration( RubyHash rubyHash ) {
-    	CONFIGURATION.set( rubyHash );
-    }    
+      @Override
+      protected synchronized RubyHash initialValue() {
+          return RubyHash.newHash( Ruby.newInstance() );
+      }
+  };
 	
 	/**
 	 * Create new instance
@@ -52,6 +45,7 @@ public abstract class AbstractDeployment implements Deployable {
 	/**
 	 * Called after the execution, if no errors.
 	 */
+  @Override
 	public void afterFinish() {
 		log.debug( "Executing afterFinish" );
 	}
@@ -59,6 +53,7 @@ public abstract class AbstractDeployment implements Deployable {
 	/**
 	 * Called before execution
 	 */
+  @Override
 	public void beforeStart() {
 		log.debug( "Executing beforeStart" );
 	}
@@ -66,6 +61,7 @@ public abstract class AbstractDeployment implements Deployable {
 	/**
 	 * Execute deployment process
 	 */
+  @Override
 	public void execute() {
 		log.debug( "Executing execute" );
 	}
@@ -74,6 +70,7 @@ public abstract class AbstractDeployment implements Deployable {
 	 * Called if {@link #beforeStart}, {@link #execute()}, or {@link #afterFinish()} throws
 	 * and exception
 	 */
+  @Override
 	public void onError(Throwable throwable) {
 		log.debug( "Executing onError" );
 		
@@ -85,7 +82,7 @@ public abstract class AbstractDeployment implements Deployable {
 	}
 	
 	/**
-	 * Get Bean from the Spring Context
+	 * Helper method to get a Bean from the Spring Context
 	 * 
 	 * @param beanName String
 	 * @return Object
@@ -105,5 +102,23 @@ public abstract class AbstractDeployment implements Deployable {
 	public ApplicationContext getApplicationContext() {
 		return Springleton.getApplicationContext();
 	}
+
+  /**
+   * Threadlocal runtime configuration for deployment
+   *
+   * @return RubyHash
+   */
+  public static RubyHash getConfiguration() {
+    return CONFIGURATION.get();
+  }
+
+  /**
+   * Threadlocal runtime configuration for deployment
+   *
+   * @param rubyHash
+   */
+  public static void setConfiguration( RubyHash rubyHash ) {
+    CONFIGURATION.set( rubyHash );
+  }
 
 }

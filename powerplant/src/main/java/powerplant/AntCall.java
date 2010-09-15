@@ -2,9 +2,12 @@ package powerplant;
 
 import java.io.File;
 
-// Apache Ant
+// Java SDK
 import java.io.IOException;
 import java.util.Map;
+
+
+// Apache Ant
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -28,11 +31,24 @@ public class AntCall {
 
     log = LogHelper.getLog( this.getClass(), logFile );
   }
-  
+
+  /**
+   * Run an Ant task
+   * 
+   * @param task
+   * @throws AntException
+   */
   public void runTask( String task ) throws AntException {
     runTask( task, null );
   }
 
+  /**
+   * Run an Ant task with parameters
+   * 
+   * @param task
+   * @param parameters
+   * @throws AntException
+   */
   public void runTask( String task, Map parameters ) throws AntException {
     File buildFile = new File( this.buildXML );
     File buildDir = new File( this.baseDir );
