@@ -27,11 +27,8 @@ class Account < ActiveRecord::Base
 
 
 
-  # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   #
-  # uff.  this is really an authorization, not authentication routine.  
-  # We really need a Dispatch Chain here or something.
-  # This will also let us return a human error message.
+  # Authenticates a user by their login name and unencrypted password.
   #
   def self.authenticate(login, password)
     return nil if login.blank? || password.blank?

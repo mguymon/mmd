@@ -1,6 +1,5 @@
 class AccountsController < ApplicationController
  
-  # render new.rhtml
   def new
     @account = Account.new
   end
@@ -10,10 +9,7 @@ class AccountsController < ApplicationController
     @account = Account.new(params[:account])
     success = @account && @account.save
     if success && @account.errors.empty?
-            # Protects against session fixation attacks, causes request forgery
-      # protection if visitor resubmits an earlier form using back
-      # button. Uncomment if you understand the tradeoffs.
-      # reset session
+           
       self.current_account = @account # !! now logged in
       redirect_back_or_default('/')
       flash[:notice] = "Thanks for signing up!  We're sending you an email with your activation code."
