@@ -4,9 +4,9 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path(File.join(File.dirname(__FILE__),'..','config','environment'))
 require 'spec/autorun'
 require 'spec/rails'
-require 'log4r'
 
-include AuthenticatedTestHelper
+# Uncomment the next line to use webrat's matchers
+#require 'webrat/integrations/rspec-rails'
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
@@ -44,9 +44,13 @@ Spec::Runner.configure do |config|
   # RSpec uses it's own mocking framework by default. If you prefer to
   # use mocha, flexmock or RR, uncomment the appropriate line:
   #
-  # 
-  # config.mock_with :mocha config.mock_with :flexmock config.mock_with :rr
-  
+  # config.mock_with :mocha
+  # config.mock_with :flexmock
+  # config.mock_with :rr
+  #
+  # == Notes
+  #
+  # For more information take a look at Spec::Runner::Configuration and Spec::Runner
   Spec::Runner.configure do |config|
     config.include FixtureReplacement
   end
