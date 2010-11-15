@@ -6,11 +6,12 @@ module MMD
       def before_action()
         @goals = []
         @checkout_path = @parameters[:checkout_path]
+        @prefix = @options[:prefix]
       end
 
       def action
         @goals.each do |goal|
-          IO.popen( "cd #{@checkout_path} && mvn -Dmaven.test.skip=true #{goal}" ) do |pipe|
+          IO.popen( "#{@prefix + " &&" if @prefix} cd #{@checkout_path} && mvn -Dmaven.test.skip=true #{goal}" ) do |pipe|
             pipe.sync = true
             while msg = pipe.gets
                 @logger.info( "  #{msg.strip()}" )
