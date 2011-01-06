@@ -75,7 +75,7 @@ deploy_id = nil
 
 # Load args from yaml
 def set_args_from_yaml(yaml_path)
-    yaml = YAML::load( yaml_path )
+    yaml = YAML::load( File.open(yaml_path) )
     login = yaml['login']
     password = yaml['password']
     client = yaml['client']
