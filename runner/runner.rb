@@ -148,6 +148,18 @@ else
   end
 end
 
+# Load args from yaml
+def set_args_from_yaml(yaml_path)
+    yaml = YAML::load( yaml_path )
+    login = yaml['login'] if login.nil?
+    password = yaml['password'] if password.nil?
+    client = yaml['client'] if client.nil?
+    project = yaml['project'] if project.nil?
+    application = yaml['application'] if application.nil?
+    environment = yaml['environment'] if environment.nil?
+    mmd_url = yaml['mmd_url'] if mmd_url.nil?
+end
+
 # Load from HOME/.mmd/runner.yml
 yaml_path = File.expand_path( File.join('~', '.mmd', 'runner.yml' ) )
 if File.exists?( yaml_path )
@@ -164,17 +176,6 @@ end
 yaml_path = File.expand_path( File.join( File.dirname(__FILE__), 'runner.yml' ) )
 if File.exists?( yaml_path )
     set_args_from_yaml(yaml_path)
-end
-
-def set_args_from_yaml(yaml_path)
-    yaml = YAML::load( yaml_path )
-    login = yaml['login'] if login.nil?
-    password = yaml['password'] if password.nil?
-    client = yaml['client'] if client.nil?
-    project = yaml['project'] if project.nil?
-    application = yaml['application'] if application.nil?
-    environment = yaml['environment'] if environment.nil?
-    mmd_url = yaml['mmd_url'] if mmd_url.nil?
 end
 
 
