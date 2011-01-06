@@ -149,7 +149,7 @@ else
 end
 
 # Load from HOME/.mmd/runner.yml
-yaml_path = File.expand_path( File.join('~.mmd', 'runner.yml' ) )
+yaml_path = File.expand_path( File.join('~', '.mmd', 'runner.yml' ) )
 if File.exists?( yaml_path )
     set_args_from_yaml(yaml_path)
 end
