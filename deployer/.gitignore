@@ -5,3 +5,5 @@ workspace
 deployer.war
 config/database.yml
 config/deploy.rb
+Capfile
+nbproject
