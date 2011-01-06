@@ -54,35 +54,35 @@ require 'net/https'
 require 'yaml'   
  
 # Global variables
-client = nil
-clients = nil
-project = nil
-projects = nil
-application = nil
-applications = nil
-environment = nil
-environments = nil
-environment_id = nil
-login = nil
-password = nil
-mmd_url = nil
-skip_prompt = false
-is_production = false
-is_running = false
+@client = nil
+@clients = nil
+@project = nil
+@projects = nil
+@application = nil
+@applications = nil
+@environment = nil
+@environments = nil
+@environment_id = nil
+@login = nil
+@password = nil
+@mmd_url = nil
+@skip_prompt = false
+@is_production = false
+@is_running = false
 @is_debug   = false
-is_deploy = false
-deploy_id = nil
+@is_deploy = false
+@deploy_id = nil
 
 # Load args from yaml
 def set_args_from_yaml(yaml_path)
     yaml = YAML::load( File.open(yaml_path) )
-    login = yaml['login']
-    password = yaml['password']
-    client = yaml['client']
-    project = yaml['project']
-    application = yaml['application']
-    environment = yaml['environment']
-    mmd_url = yaml['mmd_url']
+    @login = yaml['login']
+    @password = yaml['password']
+    @client = yaml['client']
+    @project = yaml['project']
+    @application = yaml['application']
+    @environment = yaml['environment']
+    @mmd_url = yaml['mmd_url']
 end
 
 # Load from HOME/.mmd/runner.yml
@@ -128,53 +128,53 @@ opts.each do |opt, arg|
   when '--debug'
     @is_debug = true
   when '--login'
-    login = arg
+    @login = arg
   when '--password'
-    password = arg
+    @password = arg
   when '--client'
-    client = arg
+    @client = arg
   when '--project'
-    project = arg
+    @project = arg
   when '--application'
-    application = arg
+    @application = arg
   when '--environment'
-    environment = arg
+    @environment = arg
   when '--environment_id'
-    environment_id = arg
+    @environment_id = arg
   when '--mmd_url'
-    mmd_url = arg
+    @mmd_url = arg
   when '--show_production'
-    is_production = true
+    @is_production = true
   when '--yes'
-    skip_prompt = true
+    @skip_prompt = true
   end
 end
 
-if environment_id != nil
-  if not environment.nil?
+if @environment_id != nil
+  if not @environment.nil?
     say("ERROR: --environment_id cannot be used in conjuction with --environment (-e)")
   end
-  if not application.nil?
+  if not @application.nil?
     say("ERROR: --environment_id cannot be used in conjuction with --application (-a)")
   end
-  if not project.nil?
+  if not @project.nil?
     say("ERROR: --environment_id cannot be used in conjuction with --project (-r)")
   end
-  if not client.nil?
+  if not @client.nil?
     say("ERROR: --environment_id cannot be used in conjuction with --client (-c)")
   end
   exit 1
 else
-  if not environment.nil? and (application.nil? or project.nil? or client.nil?)
+  if not @environment.nil? and (@application.nil? or @project.nil? or @client.nil?)
     say("ERROR: --environment cannot be used without --application (-a), --project (-r), and --client (-c)")
     exit 1
   else
-    if not application.nil? and (project.nil? or client.nil?)
+    if not @application.nil? and (@project.nil? or @client.nil?)
       say("ERROR: --application cannot be used without --project (-r), and --client (-c)")
       exit 1
     else
-      if not project.nil? and client.nil?
-        say("ERROR: --project cannot be used in conjuction with --client (-c)")
+      if not @project.nil? and client.nil?
+        say("ERROR: --project cannot be used in conjuction with --@client (-c)")
       end
     end
   end
@@ -227,20 +227,20 @@ say("-------------------------------")
 say("       Mini Mini Runner")
 say("-------------------------------")
 
-if mmd_url == nil
-  mmd_url = ask("  Enter MMD URL:  ") 
+if @mmd_url == nil
+  @mmd_url = ask("  Enter MMD URL:  ") 
 end
 
 
-if login == nil
-  login = ask("  Enter your login:  ")  { |q| q.validate = /\A\w+\Z/ }
+if @login == nil
+  @login = ask("  Enter your login:  ")  { |q| q.validate = /\A\w+\Z/ }
 end
     
-if password == nil
-  password = ask("  Enter your password:  ") { |q| q.echo = false }
+if @password == nil
+  @password = ask("  Enter your password:  ") { |q| q.echo = false }
 end
     
-uri = URI.parse( mmd_url )    
+uri = URI.parse( @mmd_url )    
 
 cookie = nil
 http = Net::HTTP.new( uri.host, uri.port)    
@@ -251,7 +251,7 @@ end
 http.start do |req|
   req.read_timeout = 300
   post = Net::HTTP::Post.new('/session.xml')
-  post.set_form_data({'login'=>login, 'password'=>password})
+  post.set_form_data({'login'=>@login, 'password'=>@password})
   response = http.request(post)
   response_body =response.body
   cookie = response.response['set-cookie']
@@ -263,45 +263,45 @@ http.start do |req|
   end
 end
 
-if environment_id == nil
-  if client.nil?
+if @environment_id == nil
+  if @client.nil?
     result = mmd_get( 'client', uri, cookie )
-    clients = result[1]
-    client = result[0]
+    @clients = result[1]
+    @client = result[0]
   end
 
-  if project.nil?
-    result = mmd_get( 'project', uri, cookie, :client_id => clients[client] )
-    projects = result[1]
-    project = result[0]
+  if @project.nil?
+    result = mmd_get( 'project', uri, cookie, :client_id => @clients[@client] )
+    @projects = result[1]
+    @project = result[0]
   end
 
-  if application.nil?
-    result = mmd_get( 'app', uri, cookie, :project_id => projects[project] )
-    applications = result[1]
-    application = result[0]
+  if @application.nil?
+    result = mmd_get( 'app', uri, cookie, :project_id => @projects[@project] )
+    @applications = result[1]
+    @application = result[0]
   end
 
-  if environment.nil?
+  if @environment.nil?
     result = mmd_get( 'environment', uri, cookie,
-      {:application_id => applications[application], :is_prodction => is_production}, true )
-    environments = result[1]
-    environment = result[0]
-    environment_id = environments[environment]
+      {:application_id => @applications[@application], :is_prodction => @is_production}, true )
+    @environments = result[1]
+    @environment = result[0]
+    @environment_id = @environments[@environment]
 
     # Check to see if a deploy is already in progress
     doc = REXML::Document.new( result[2] )
     doc.elements.each("environments/environment") do |ele|
-      if ele.text('id') == environment_id
+      if ele.text('id') == @environment_id
         if ele.text('deploy-process/deploy/is-running') == 'true'
-          is_running = true
-          deploy_id = ele.text('deploy-process/deploy/id')
+          @is_running = true
+          @deploy_id = ele.text('deploy-process/deploy/id')
           break
         end
       end
     end
   else
-    environments  = {}
+    @environments  = {}
     http = Net::HTTP.new( uri.host, uri.port)
     if uri.scheme == 'https'
       http.use_ssl = true
@@ -317,7 +317,7 @@ if environment_id == nil
       if response =~ /<environments type="array">/
         doc = REXML::Document.new( response )
         doc.elements.each("environments/environment") do |ele|
-          environments[ele.text('name')] = ele.text('id')
+          @environments[ele.text('name')] = ele.text('id')
         end
       else
         say("ERROR: Mighty Mighty Deployer returned unexpected result")
@@ -328,15 +328,15 @@ if environment_id == nil
       end
     end
 
-    environment_id = environments[environment]
+    @environment_id = @environments[@environment]
 
     # Check to see if a deploy is already in progress
     doc = REXML::Document.new( response )
     doc.elements.each("environments/environment") do |ele|
-      if ele.text('id') == environment_id
+      if ele.text('id') == @environment_id
         if ele.text('deploy-process/deploy/is-running') == 'true'
-          is_running = true
-          deploy_id = ele.text('deploy-process/deploy/id')
+          @is_running = true
+          @deploy_id = ele.text('deploy-process/deploy/id')
           break
         end
       end
@@ -344,32 +344,32 @@ if environment_id == nil
   end
 end
 
-if not skip_prompt
-  if is_running
-    say( "Deploy to #{environment} as #{application} from #{project} for #{client} is already in progress." )
+if not @skip_prompt
+  if @is_running
+    say( "Deploy to #{@environment} as #{@application} from #{@project} for #{@client} is already in progress." )
     say( "View the deploy already in progress?" )
   else
-    say( "Deploy to #{environment} as #{application} from #{project} for #{client}?" )
+    say( "Deploy to #{@environment} as #{@application} from #{@project} for #{@client}?" )
   end
   choose do |menu|
     menu.select_by = :index_or_name
     choices = ['yes', 'no']
     choices.each do |option|
-      menu.choice option do |select| say( "  #{select} selected" ); is_deploy = (select == 'yes')  end
+      menu.choice option do |select| say( "  #{select} selected" ); @is_deploy = (select == 'yes')  end
     end
   end
 else
-  is_deploy = true
+  @is_deploy = true
 end
 
-if !is_deploy
+if !@is_deploy
   say( "exiting" )
   exit 1
 else
   say( "--= Begin Progress Log =--")
 
   log_end = 0
-  if not is_running
+  if not @is_running
     http = Net::HTTP.new( uri.host, uri.port)
     if uri.scheme == 'https'
       http.use_ssl = true
@@ -379,7 +379,7 @@ else
       req.read_timeout = 300
       post = Net::HTTP::Post.new('/deploys.xml')
       post.initialize_http_header({ 'cookie' => cookie })
-      post.set_form_data({'environment_id' => environment_id, 'deployed_by' => login})
+      post.set_form_data({'environment_id' => @environment_id, 'deployed_by' => @login})
 
       result = http.request(post).body
       if result =~ /<deploy>/
@@ -397,7 +397,7 @@ else
 
         doc.elements.each('deploy/is-running') do |ele|
           if ele.text == 'true'
-            is_running = true
+            @is_running = true
           else
             doc.elements.each('deploy/note') do |ele|
               if ele.has_text?
@@ -408,7 +408,7 @@ else
         end
 
         doc.elements.each('deploy/id') do |ele|
-          deploy_id = ele.text
+          @deploy_id = ele.text
         end
 
         doc.elements.each('deploy/log_end') do |ele|
@@ -425,7 +425,7 @@ else
   end
   
   sleep_seconds = 5
-  if is_running
+  if @is_running
     http = Net::HTTP.new( uri.host, uri.port)
     if uri.scheme == 'https'
       http.use_ssl = true
@@ -433,9 +433,9 @@ else
     end
     http.start do |req|
       req.read_timeout = 300
-      while is_running
+      while @is_running
 
-        get = Net::HTTP::Get.new("/deploys/#{deploy_id}.xml?start=#{log_end}")
+        get = Net::HTTP::Get.new("/deploys/#{@deploy_id}.xml?start=#{log_end}")
         get.initialize_http_header({ 'cookie' => cookie })
         result = http.request(get).body
         if result =~ /<deploy>/
@@ -465,7 +465,7 @@ else
 
           doc.elements.each('deploy/is-running') do |ele|
             if ele.text != 'true'
-              is_running = false
+              @is_running = false
               doc.elements.each('deploy/note') do |ele|
                 if ele.has_text?
                   say( "Deploy finished with note: #{ele.text}")
