@@ -16,7 +16,6 @@ public class AntCallTest {
   /**
    * Test of runTask method, of class AntCall.
    */
-  @Test
   public void testRunTask() {
     String task = "test";
     AntCall instance = null;
