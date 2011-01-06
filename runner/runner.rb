@@ -53,6 +53,26 @@ require 'net/http'
 require 'net/https'
 require 'yaml'   
  
+# Global variables
+client = nil
+clients = nil
+project = nil
+projects = nil
+application = nil
+applications = nil
+environment = nil
+environments = nil
+environment_id = nil
+login = nil
+password = nil
+mmd_url = nil
+skip_prompt = false
+is_production = false
+is_running = false
+@is_debug   = false
+is_deploy = false
+deploy_id = nil
+
 # Load args from yaml
 def set_args_from_yaml(yaml_path)
     yaml = YAML::load( yaml_path )
@@ -100,25 +120,6 @@ opts = GetoptLong.new(
   [ '--show_production', '-s', GetoptLong::OPTIONAL_ARGUMENT ],
   [ '--yes',             '-y', GetoptLong::NO_ARGUMENT ]
 )
-
-client = nil
-clients = nil
-project = nil
-projects = nil
-application = nil
-applications = nil
-environment = nil
-environments = nil
-environment_id = nil
-login = nil
-password = nil
-mmd_url = nil
-skip_prompt = false
-is_production = false
-is_running = false
-@is_debug   = false
-is_deploy = false
-deploy_id = nil
 
 opts.each do |opt, arg|
   case opt
