@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 # == Synopsis
 # 
 # Deploy environment using Mighty Mighty Deployer, prompts for login, password
@@ -32,7 +34,7 @@
 #    The environment short name to deploy
 #    
 # -m [url], --mmd_url [url]:
-#    Specify the url of the Mighty Mighty Deployer. Defaults to https://maroon.igicom.com
+#    Specify the url of the Mighty Mighty Deployer. 
 #    
 # -s, --show_production:
 #    Show production environments in list
@@ -48,7 +50,8 @@ require "highline/import"
 require 'rexml/document'
 require 'uri'
 require 'net/http'
-require 'net/https'   
+require 'net/https'
+require 'yaml'   
  
 HighLine.track_eof = false
 
@@ -78,7 +81,7 @@ environments = nil
 environment_id = nil
 login = nil
 password = nil
-mmd_url = 'https://maroon.igicom.com'
+mmd_url = nil
 skip_prompt = false
 is_production = false
 is_running = false
@@ -145,6 +148,18 @@ else
   end
 end
 
+# Load YAML config
+if File.exists?( 'runner.yml' )
+    yaml = YAML::load( File.open( 'runner.yml' ) )
+    login = yaml['login'] if login.nil?
+    password = yaml['password'] if password.nil?
+    client = yaml['client'] if client.nil?
+    project = yaml['project'] if project.nil?
+    application = yaml['application'] if application.nil?
+    environment = yaml['environment'] if environment.nil?
+    mmd_url = yaml['mmd_url'] if mmd_url.nil?
+end
+
 
 def mmd_get( request_type, uri, cookie, params = {}, return_response = false )
   say("Connecting to get list of #{request_type}s")
@@ -193,8 +208,13 @@ say("-------------------------------")
 say("       Mini Mini Runner")
 say("-------------------------------")
 
+if mmd_url == nil
+  mmd_url = ask("  Enter MMD URL:  ") 
+end
+
+
 if login == nil
-  login = ask("  Enter your login?  ")  { |q| q.validate = /\A\w+\Z/ }
+  login = ask("  Enter your login:  ")  { |q| q.validate = /\A\w+\Z/ }
 end
     
 if password == nil
