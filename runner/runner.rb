@@ -53,6 +53,37 @@ require 'net/http'
 require 'net/https'
 require 'yaml'   
  
+# Load args from yaml
+def set_args_from_yaml(yaml_path)
+    yaml = YAML::load( yaml_path )
+    login = yaml['login']
+    password = yaml['password']
+    client = yaml['client']
+    project = yaml['project']
+    application = yaml['application']
+    environment = yaml['environment']
+    mmd_url = yaml['mmd_url']
+end
+
+# Load from HOME/.mmd/runner.yml
+yaml_path = File.expand_path( File.join('~', '.mmd', 'runner.yml' ) )
+if File.exists?( yaml_path )
+    set_args_from_yaml(yaml_path)
+end
+
+# Load relative to working dir runner.yml
+yaml_path = File.expand_path( File.join('.', 'runner.yml' ) ) 
+if File.exists?( yaml_path )
+    set_args_from_yaml(yaml_path)
+end
+
+# Load relative to the location of the runner.rb script
+yaml_path = File.expand_path( File.join( File.dirname(__FILE__), 'runner.yml' ) )
+if File.exists?( yaml_path )
+    set_args_from_yaml(yaml_path)
+end
+
+
 HighLine.track_eof = false
 
 opts = GetoptLong.new(
@@ -147,37 +178,6 @@ else
     end
   end
 end
-
-# Load args from yaml
-def set_args_from_yaml(yaml_path)
-    yaml = YAML::load( yaml_path )
-    login = yaml['login'] if login.nil?
-    password = yaml['password'] if password.nil?
-    client = yaml['client'] if client.nil?
-    project = yaml['project'] if project.nil?
-    application = yaml['application'] if application.nil?
-    environment = yaml['environment'] if environment.nil?
-    mmd_url = yaml['mmd_url'] if mmd_url.nil?
-end
-
-# Load from HOME/.mmd/runner.yml
-yaml_path = File.expand_path( File.join('~', '.mmd', 'runner.yml' ) )
-if File.exists?( yaml_path )
-    set_args_from_yaml(yaml_path)
-end
-
-# Load relative to working dir runner.yml
-yaml_path = File.expand_path( File.join('.', 'runner.yml' ) ) 
-if File.exists?( yaml_path )
-    set_args_from_yaml(yaml_path)
-end
-
-# Load relative to the location of the runner.rb script
-yaml_path = File.expand_path( File.join( File.dirname(__FILE__), 'runner.yml' ) )
-if File.exists?( yaml_path )
-    set_args_from_yaml(yaml_path)
-end
-
 
 def mmd_get( request_type, uri, cookie, params = {}, return_response = false )
   say("Connecting to get list of #{request_type}s")
