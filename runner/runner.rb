@@ -149,19 +149,19 @@ else
 end
 
 # Load from HOME/.mmd/runner.yml
-yaml_path = File.expand_path('~', '.mmd', 'runner.yml' )
+yaml_path = File.expand_path( File.join('~.mmd', 'runner.yml' ) )
 if File.exists?( yaml_path )
     set_args_from_yaml(yaml_path)
 end
 
 # Load relative to working dir runner.yml
-yaml_path = File.expand_path('.', 'runner.yml' )
+yaml_path = File.expand_path( File.join('.', 'runner.yml' ) ) 
 if File.exists?( yaml_path )
     set_args_from_yaml(yaml_path)
 end
 
 # Load relative to the location of the runner.rb script
-yaml_path = File.expand_path(File.dirname(__FILE__), 'runner.yml' )
+yaml_path = File.expand_path( File.join( File.dirname(__FILE__), 'runner.yml' ) )
 if File.exists?( yaml_path )
     set_args_from_yaml(yaml_path)
 end
