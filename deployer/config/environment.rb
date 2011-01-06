@@ -19,7 +19,7 @@ Rails::Initializer.run do |config|
   config.gem 'jruby-openssl', :lib => 'openssl'
   config.gem "net-ssh", :lib => 'net/ssh'
   config.gem 'net-scp', :lib => 'net/scp'
-  config.gem 'net-sftp', :lib => 'net/sftp', :version => '2.0.4'
+  config.gem 'net-sftp', :lib => 'net/sftp' #, :version => '2.0.4'
   config.gem 'net-ssh-gateway', :lib => 'net/ssh/gateway'
   config.gem 'capistrano'
   #config.gem 'buildr'

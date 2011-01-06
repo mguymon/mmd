@@ -148,9 +148,26 @@ else
   end
 end
 
-# Load YAML config
-if File.exists?( 'runner.yml' )
-    yaml = YAML::load( File.open( 'runner.yml' ) )
+# Load from HOME/.mmd/runner.yml
+yaml_path = File.expand_path('~', '.mmd', 'runner.yml' )
+if File.exists?( yaml_path )
+    set_args_from_yaml(yaml_path)
+end
+
+# Load relative to working dir runner.yml
+yaml_path = File.expand_path('.', 'runner.yml' )
+if File.exists?( yaml_path )
+    set_args_from_yaml(yaml_path)
+end
+
+# Load relative to the location of the runner.rb script
+yaml_path = File.expand_path(File.dirname(__FILE__), 'runner.yml' )
+if File.exists?( yaml_path )
+    set_args_from_yaml(yaml_path)
+end
+
+def set_args_from_yaml(yaml_path)
+    yaml = YAML::load( yaml_path )
     login = yaml['login'] if login.nil?
     password = yaml['password'] if password.nil?
     client = yaml['client'] if client.nil?
