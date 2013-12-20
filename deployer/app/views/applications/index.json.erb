@@ -1,9 +1,0 @@
-{ client: { id: <%= @application.project.client.id %> }, 
-  project: { id: <%= @application.project.id%> }, 
-  application: { id: <%=@application.id%> },
-  environments: [
-	<% @application.environments.each do |environment| -%>
-          { id: <%=environment.id%>,
-            name: '<%=environment.name%>' },
-	<% end -%> ]
-}

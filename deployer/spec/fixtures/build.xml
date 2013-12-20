@@ -1,5 +1,0 @@
-<project name="testproject" default="test" basedir=".">
-	<target name="test">
-		<echo message="Test for Ant Spec!" file="../../log/ant_spec.log" append="true"/>
-	</target>
-</project>

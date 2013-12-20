@@ -1,7 +1,0 @@
-this
-is
-a
-simple test file
-for some
-simple
-test

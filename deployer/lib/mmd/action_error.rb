@@ -1,3 +1,0 @@
-class ActionError < RuntimeError
-  
-end
