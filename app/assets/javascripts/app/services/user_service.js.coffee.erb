@@ -1,0 +1,14 @@
+angular.module("DeployerApp.services").service "CurrentUserService", ($rootScope, CurrentUser, User) ->
+    userService =
+        reloadCurrentUser: ->
+            <% unless Rails.env.production? %>
+            console.log "Loading user info"
+            <% end %>
+
+            @currentUser = CurrentUser.show((user) ->
+                $rootScope.currentUser = user
+            )
+            @currentUser
+
+    userService.reloadCurrentUser()
+    userService

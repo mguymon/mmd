@@ -1,0 +1,21 @@
+angular.module("DeployerApp.resources").factory "Users", ($resource) ->
+  $resource "/users.json", {},
+    index:
+      method: "GET"
+      isArray: true
+      type: "User"
+
+
+angular.module("DeployerApp.resources").factory "CurrentUser", ($resource) ->
+  $resource "/users/current.json", {},
+    show:
+      method: "GET"
+
+
+angular.module("DeployerApp.resources").factory "User", ($resource) ->
+  $resource "/users/:user_id.json", {},
+    show:
+      method: "GET"
+    update:
+      method: "PUT"
+

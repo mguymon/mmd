@@ -1,0 +1,49 @@
+#= require_self
+#= require app/services/services
+#= require app/resources/resources
+#= require app/controllers/controllers
+#= require app/directives/directives
+#= require app/filters/filters
+
+# APP DEPENDENCIES
+# ****************************************
+app = angular.module("DeployerApp", [
+    "DeployerApp.filters",
+    "DeployerApp.home",
+    "DeployerApp.resources",
+    "DeployerApp.services",
+    "DeployerApp.users"
+])
+
+# DEFINE APP MODULES HERE (alphabetical)
+# ****************************************
+angular.module "DeployerApp.filters", []
+angular.module "DeployerApp.home", ["DeployerApp.resources", "ngRoute"]
+angular.module "DeployerApp.resources", ["ngResource"]
+angular.module "DeployerApp.services", ["DeployerApp.resources"]
+angular.module "DeployerApp.users", ["DeployerApp.resources",'DeployerApp.services', 'ngRoute']
+
+# APP CONFIG
+# ****************************************
+
+# CSRF token
+app.config ["$httpProvider", (provider) ->
+    provider.defaults.headers.common["X-CSRF-Token"] = $("meta[name=csrf-token]").attr("content")
+]
+
+# UTFitude
+app.config ["$httpProvider", ($httpProvider) ->
+    $httpProvider.defaults.transformRequest.push (data, headersGetter) ->
+        utf8_data = data
+        unless angular.isUndefined(data)
+            d = angular.fromJson(data)
+            d["_utf8"] = "&#9731;"
+            utf8_data = angular.toJson(d)
+        utf8_data
+]
+
+# Catch all
+app.config ($locationProvider, $routeProvider) ->
+    $routeProvider.otherwise
+        templateUrl: '<%= asset_path('home/index.html') %>',
+        controller: "HomeCtrl"

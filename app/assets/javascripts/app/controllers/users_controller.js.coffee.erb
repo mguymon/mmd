@@ -1,0 +1,21 @@
+# User Controllers
+# ----------------
+
+# Handles the Users
+
+# ### Routes
+#
+# * /users/current
+# * /users/:user_id
+#
+angular.module("DeployerApp.users").config ["$routeProvider", ($routeProvider) ->
+    $routeProvider.when( "/users/current",
+        templateUrl: "<%= asset_path 'users/show.html' %>"
+        controller: "UsersCtrl"
+    )
+]
+
+# ### Controller
+angular.module("DeployerApp.users").controller "UsersCtrl", ["$scope", "CurrentUserService", ($scope, CurrentUserService) ->
+
+]

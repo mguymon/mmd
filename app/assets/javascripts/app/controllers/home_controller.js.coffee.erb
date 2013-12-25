@@ -1,0 +1,23 @@
+#
+# Home Controller
+# ----------------
+
+# ### Routes
+#
+# * /
+# * /home
+#
+angular.module("DeployerApp.home").config ["$routeProvider", ($routeProvider) ->
+    $routeProvider.when( "/",
+        templateUrl: "<%= asset_path 'home/index.html' %>"
+        controller: "HomeCtrl"
+    ).when( "/home",
+        templateUrl: "<%= asset_path 'home/index.html' %>"
+        controller: "HomeCtrl"
+    )
+]
+
+# ### Controller
+angular.module("DeployerApp.home").controller "HomeCtrl", ["$scope", "CurrentUserService", ($scope, CurrentUserService) ->
+
+]
