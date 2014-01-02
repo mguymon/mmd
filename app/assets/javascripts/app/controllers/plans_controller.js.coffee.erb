@@ -1,0 +1,19 @@
+#
+# Home Controller
+# ----------------
+
+# ### Routes
+#
+# * /plans/:plan_name
+#
+angular.module("DeployerApp.plans").config ["$routeProvider", ($routeProvider) ->
+    $routeProvider.when( "/plans/:plan_name",
+        templateUrl: "<%= asset_path 'plans/show.html' %>"
+        controller: "PlansShowCtrl"
+    )
+]
+
+# ### Controller
+angular.module("DeployerApp.plans").controller "PlansShowCtrl", ["$scope", '$routeParams', "Plan", "CurrentUserService", ($scope, $routeParams, Plan, CurrentUserService) ->
+    $scope.plan = Plan.get({plan_id: $routeParams.plan_name })
+]

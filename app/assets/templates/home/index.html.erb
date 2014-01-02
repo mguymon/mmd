@@ -2,11 +2,19 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h1>Blank Page <small>A Blank Slate</small></h1>
-            <ol class="breadcrumb">
-                <li><a href="index.html"><i class="icon-dashboard"></i> Dashboard</a></li>
-                <li class="active"><i class="icon-file-alt"></i> Blank Page</li>
-            </ol>
+            <h1>Dashboard</h1>
+        </div>
+    </div><!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            Plans
+        </div>
+    </div><!-- /.row -->
+    <div class="row">
+        <div class="col-lg-4" ng-repeat="plan in plans">
+            <div class="well">
+                <a href="/#/plans/{{plan.name}}">{{plan.name}}</a>
+            </div>
         </div>
     </div><!-- /.row -->
 

@@ -7,6 +7,8 @@ gem 'rails', '4.0.2'
 gem 'activerecord-jdbcmysql-adapter', platform: :jruby
 gem 'mysql2', platform: :ruby
 
+gem 'friendly_id', '~> 5.0.2'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 
@@ -33,6 +35,14 @@ gem 'ledermann-rails-settings', :require => 'rails-settings'
 gem 'font-awesome-rails', '~> 4.0.3.0'
 
 gem 'puma', '~> 2.7.1'
+
+gem 'fog'
+
+gem 'typhoeus'
+
+gem 'faraday'
+
+gem 'figaro'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

@@ -7,6 +7,9 @@ class User < ActiveRecord::Base
   has_many :user_plans
   has_many :plans, through: :user_plans
 
+  has_many :user_accounts
+  has_many :accounts, through: :user_accounts
+
   def full_name
     "#{first_name} #{last_name}"
   end

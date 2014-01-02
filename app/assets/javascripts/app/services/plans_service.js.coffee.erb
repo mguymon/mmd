@@ -1,0 +1,12 @@
+angular.module("DeployerApp.services").service "PlansService", ($rootScope, Plans) ->
+    plansService =
+        reloadPlans: ->
+            <% unless Rails.env.production? %>
+            console.log "Loading plans info"
+            <% end %>
+
+            $rootScope.plans = @plans = Plans.index()
+            @plans
+
+    plansService.reloadPlans()
+    plansService

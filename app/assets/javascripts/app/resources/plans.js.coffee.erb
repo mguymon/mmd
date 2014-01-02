@@ -1,0 +1,13 @@
+angular.module("DeployerApp.resources").factory "Plans", ($resource) ->
+    $resource "/plans.json", {},
+        index:
+            method: "GET"
+            isArray: true
+            type: "Plan"
+
+angular.module("DeployerApp.resources").factory "Plan", ($resource) ->
+    $resource "/plans/:plan_id.json", {},
+        show:
+            method: "GET"
+        update:
+            method: "PUT"

@@ -15,11 +15,10 @@
 <body>
 
 <div <%= content_for?(:wrapper_div) ? yield(:wrapper_div) : 'id="wrapper"'.html_safe %>>
-    <div class="nav-goes-here">
-        <% if current_user %>
-            <%= render partial: 'layouts/top_nav' %>
-        <% end %>
-    </div>
+
+    <% if current_user %>
+        <%= render partial: 'layouts/top_nav' %>
+    <% end %>
 
     <%= yield %>
 </div>

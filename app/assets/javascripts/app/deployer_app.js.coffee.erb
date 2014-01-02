@@ -1,15 +1,17 @@
 #= require_self
-#= require app/services/services
 #= require app/resources/resources
-#= require app/controllers/controllers
+#= require app/services/services
 #= require app/directives/directives
 #= require app/filters/filters
+#= require app/controllers/controllers
 
 # APP DEPENDENCIES
 # ****************************************
 app = angular.module("DeployerApp", [
     "DeployerApp.filters",
     "DeployerApp.home",
+    "DeployerApp.navigation",
+    "DeployerApp.plans",
     "DeployerApp.resources",
     "DeployerApp.services",
     "DeployerApp.users"
@@ -19,6 +21,8 @@ app = angular.module("DeployerApp", [
 # ****************************************
 angular.module "DeployerApp.filters", []
 angular.module "DeployerApp.home", ["DeployerApp.resources", "ngRoute"]
+angular.module "DeployerApp.navigation", ["DeployerApp.resources"]
+angular.module "DeployerApp.plans", ["DeployerApp.resources", "ngRoute"]
 angular.module "DeployerApp.resources", ["ngResource"]
 angular.module "DeployerApp.services", ["DeployerApp.resources"]
 angular.module "DeployerApp.users", ["DeployerApp.resources",'DeployerApp.services', 'ngRoute']
@@ -42,8 +46,10 @@ app.config ["$httpProvider", ($httpProvider) ->
         utf8_data
 ]
 
+<% if Rails.env.production? %>
 # Catch all
 app.config ($locationProvider, $routeProvider) ->
     $routeProvider.otherwise
         templateUrl: '<%= asset_path('home/index.html') %>',
         controller: "HomeCtrl"
+<% end %>
