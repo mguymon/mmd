@@ -2,6 +2,9 @@
 
 sleep 30
 
+# set mmd.etcd in hosts
+echo '127.0.0.1 mmd.etcd' >> /etc/hosts
+
 # No password sudo
 sed -i -e '/Defaults\s\+env_reset/a Defaults\texempt_group=admin' /etc/sudoers
 sed -i -e 's/%admin ALL=(ALL) ALL/%admin ALL=NOPASSWD:ALL/g' /etc/sudoers
@@ -60,12 +63,12 @@ cd /etc/pki_mmd/ca && cat certs/etcd.crt private/etcd.key > private/etcd-key-cer
 cat /etc/pki_mmd/ca/certs/etcd.crt /etc/pki_mmd/ca/certs/mmdca.crt > /etc/pki_mmd/ca/certs/etcd.chained.crt
 
 echo "Creating Web Server cert"
-cd /etc/pki_mmd/ca && openssl req -config openssl.ca.cnf -new -nodes -keyout private/web.key -out web.csr -days 3650 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=mmd.etcd"
+cd /etc/pki_mmd/ca && openssl req -config openssl.ca.cnf -new -nodes -keyout private/web.key -out web.csr -days 3650 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=mmd.web"
 chown root.root /etc/pki_mmd/ca/private/web.key
 chmod 0400 /etc/pki_mmd/ca/private/web.key
 
 cd /etc/pki_mmd/ca && openssl ca -batch -config openssl.ca.cnf -policy policy_anything -out certs/web.crt -infiles web.csr
-rm -f /etc/pki_mmd/mmd/web.csr
+rm -f /etc/pki_mmd/ca/web.csr
 
 echo "Verifying Server cert"
 openssl x509 -in /etc/pki_mmd/ca/certs/web.crt -noout -text
@@ -80,9 +83,9 @@ cat /etc/pki_mmd/ca/certs/web.crt /etc/pki_mmd/ca/certs/mmdca.crt > /etc/pki_mmd
 
 # Setup docker
 sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/g' /etc/default/ufw
-mkdir /opt/docker /opt/docker/images
+mkdir /opt/docker /opt/docker/images /opt/etcd /opt/etcd/data
 
-sudo docker run -d -p 4001:4001 -p 7001:7001 -v /etc/pki_mmd/ca:/etc/pki_mmd/ca -name etcd coreos/etcd -f -cert-file=/etc/pki_mmd/ca/certs/etcd.crt -key-file=/etc/pki_mmd/ca/private/etcd.key -data-dir machine0 -name machine0
+sudo docker run -d -p 4001:4001 -p 7001:7001 -v /etc/pki_mmd/ca:/etc/pki_mmd/ca -v /opt/etcd/data:/machine0 -name etcd coreos/etcd -f -cert-file=/etc/pki_mmd/ca/certs/etcd.crt -key-file=/etc/pki_mmd/ca/private/etcd.key -data-dir machine0 -name machine0
 
 
 mkdir /var/lib/mariadb

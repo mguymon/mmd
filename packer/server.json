@@ -13,7 +13,8 @@
       "ssh_username": "ubuntu",
       "ami_name": "mmd_server {{timestamp}}"
     },{
-      "type": "virtualbox",
+      "name": "virtualbox",
+      "type": "virtualbox-iso",
       "vm_name": "mmd-virtualbox",
       "boot_command": [
         "<esc><esc><enter><wait>",
