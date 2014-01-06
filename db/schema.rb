@@ -36,7 +36,8 @@ ActiveRecord::Schema.define(version: 20131227035131) do
     t.datetime "updated_at"
   end
 
-  add_index "plans", ["slug"], name: "index_plans_on_slug", using: :btree
+  add_index "plans", ["account_id", "name"], name: "index_plans_on_account_id_and_name", unique: true, using: :btree
+  add_index "plans", ["account_id", "slug"], name: "index_plans_on_account_id_and_slug", unique: true, using: :btree
 
   create_table "servers", force: true do |t|
     t.string   "slug"

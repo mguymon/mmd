@@ -8,7 +8,7 @@ class PlansController < ApplicationController
 
   def show
     id = params[:id]
-    @plan = current_user.plans.where('id = ? OR slug = ?', id, id)
+    @plan = current_user.plans.where('plans.id = ? OR plans.slug = ?', id, id).first
     respond_with @plan
   end
 end

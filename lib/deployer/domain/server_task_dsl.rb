@@ -13,6 +13,10 @@ module Deployer
       end
     end
 
+    #def update_file(file, token, replacement)
+    #
+    #end
+
     def fetch
 
     end
