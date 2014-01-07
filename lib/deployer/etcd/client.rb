@@ -10,7 +10,9 @@ module Deployer
       {prefix: '/v2/keys', raw: false}
     end
 
-    def self.connect(url)
+    def self.connect(url=nil)
+      url = ENV['MMD_ETCD'] if url.nil?
+
       ssl_opts = {
           client_cert: ENV['MMD_CLIENT_CERT'],
           client_key: ENV['MMD_CLIENT_KEY'],
@@ -51,7 +53,7 @@ module Deployer
       if options[:raw]
         response.body
       else
-        JSON.parse response
+        JSON.parse response.body
       end
     end
 
@@ -66,9 +68,9 @@ module Deployer
         val = response
       else
         result = JSON.parse(response)
-        # XXX: pluck the keys out of the response
-
-        val = result # XXX: placeholder
+        if result['node'] && result['node']['nodes']
+          val = result['node']['nodes']
+        end
       end
 
       val
