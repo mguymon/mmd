@@ -50,7 +50,7 @@
           "modifyvm",
           "{{.Name}}",
           "--cpus",
-          "4"
+          "2"
         ]
       ]
     }],
@@ -66,6 +66,13 @@
           "execute_command": "echo 'ubuntu' | sudo -S sh '{{ .Path }}'"
         }
       }
+    }
+  ],
+
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "output": "packer_mmd_{{.Provider}}.box"
     }
   ]
 }

@@ -13,7 +13,7 @@ gem 'friendly_id', '~> 5.0.2'
 gem 'sass-rails', '~> 4.0.0'
 
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+gem 'uglifier' #, '>= 1.3.0'
 
 # Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails', '~> 4.0.0'
@@ -50,6 +50,7 @@ group :doc do
 end
 
 group :development do
+  gem 'vagrant', '~> 1.0.7'
   gem 'guard-minitest'
   gem 'guard-jasmine'
   gem 'guard-bundler'
