@@ -50,7 +50,6 @@ group :doc do
 end
 
 group :development do
-  gem 'vagrant', '~> 1.0.7'
   gem 'guard-minitest'
   gem 'guard-jasmine'
   gem 'guard-bundler'

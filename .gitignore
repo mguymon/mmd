@@ -7,6 +7,13 @@
 # Ignore bundler config.
 /.bundle
 
+# IDE
+*.iml
+
+# Rbenv
+.ruby-version
+.rbenv_gemsets
+
 # Config
 /config/database.yml
 
@@ -14,6 +21,10 @@
 /packer/packer_cache
 /packer/output-virtualbox
 /packer/crash.log
+/packer/*.box
+
+# vagrant
+.vagrant
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
@@ -25,3 +36,7 @@
 
 # Ignore application configuration
 /config/application.yml
+
+# test keys
+*.crt
+*.key
