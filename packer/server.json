@@ -65,6 +65,7 @@
         "virtualbox": {
           "execute_command": "echo 'ubuntu' | sudo -S sh '{{ .Path }}'",
           "scripts": [
+            "setup.sh",
             "virtualbox.sh"
           ]
         }
