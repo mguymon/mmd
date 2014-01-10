@@ -6,20 +6,23 @@ require 'typhoeus/adapters/faraday'
 module Deployer
   class Etcd::Client
 
+    attr_reader :last_request_path
+
     def defaults
       {prefix: '/v2/keys', raw: false}
     end
 
     def self.connect(url=nil)
-      url = ENV['MMD_ETCD'] if url.nil?
+      connect_url = ENV['MMD_ETCD'] if url.nil?
 
       ssl_opts = {
           client_cert: ENV['MMD_CLIENT_CERT'],
           client_key: ENV['MMD_CLIENT_KEY'],
-          ca_file: ENV['MMD_CA_CERT']
+          ca_file: ENV['MMD_CA_CERT'],
+          verify: false
       }
 
-      connection = Faraday.new(:url => url, ssl: ssl_opts) do |faraday|
+      connection = Faraday.new(:url => connect_url, ssl: ssl_opts) do |faraday|
         faraday.adapter :typhoeus
       end
 
@@ -78,7 +81,7 @@ module Deployer
 
     private
     def build_url(path, opts)
-      "#{opts[:prefix]}#{path}"
+      @last_request_path = "#{opts[:prefix]}#{path}"
     end
   end
 end
