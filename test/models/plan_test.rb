@@ -10,5 +10,8 @@ describe Plan do
   describe "instance" do
     let(:plan) { FactoryGirl.create(:plan) }
 
+    it 'should have a config' do
+      assert_equal( {}, plan.config )
+    end
   end
 end

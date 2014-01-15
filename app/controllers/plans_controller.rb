@@ -11,5 +11,5 @@ class PlansController < ApplicationController
     @plan = current_user.plans.where('plans.id = ? OR plans.slug = ?', id, id).first
     respond_with @plan, methods: :config
   end
-  
+
 end
