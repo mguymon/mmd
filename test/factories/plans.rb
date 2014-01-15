@@ -3,5 +3,6 @@
 FactoryGirl.define do
   factory :plan do
     name 'name'
+    account
   end
 end
