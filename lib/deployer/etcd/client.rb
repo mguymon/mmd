@@ -60,6 +60,8 @@ module Deployer
     def list(path, opts={})
       options = defaults.merge opts
 
+      path << '?recursive=true' if options[:recursive]
+
       # Use get to fetch the raw json for the listing
       response = get(path, options.merge(raw: true))
 
@@ -69,7 +71,9 @@ module Deployer
       else
         result = JSON.parse(response)
         if result['node'] && result['node']['nodes']
-          val = result['node']['nodes']
+          val = result['node']['nodes'].map do |node|
+            flatten_listing(node)
+          end
         end
       end
 
@@ -79,6 +83,17 @@ module Deployer
     private
     def build_url(path, opts)
       "#{opts[:prefix]}#{path}"
+    end
+
+    def flatten_listing(node)
+      if node
+        if node['dir']
+          listing = node['nodes'].map { |node| flatten_listing(node) }
+          { File.basename(node['key']) => listing }
+        else
+          { File.basename(node['key']) => node['value'] }
+        end
+      end
     end
   end
 end

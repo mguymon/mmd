@@ -34,7 +34,7 @@ describe Deployer::Etcd::ClientTest do
     end
 
     it 'will return nodes' do
-      assert_equal [{"key"=>"/foo", "value"=>"bar", "modifiedIndex"=>3, "createdIndex"=>3}, {"key"=>"/w00t", "value"=>"rawr", "modifiedIndex"=>4, "createdIndex"=>4}], @client.list('/')
+      assert_equal [{"foo"=>"bar"}, {"w00t"=>"rawr"}], @client.list('/')
     end
 
     it 'will return a raw response' do

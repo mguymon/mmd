@@ -1,3 +1,5 @@
+require 'deployer/etcd/client'
+
 class Plan < ActiveRecord::Base
   extend FriendlyId
   friendly_id :name, :use => :scoped, :scope => [:account_id]
@@ -13,5 +15,10 @@ class Plan < ActiveRecord::Base
 
   def namespace
     "/#{self.account.id}/#{self.name}"
+  end
+
+  def config
+    client = Deployer::Etcd::Client.connect
+    client.list namespace, recursive: true
   end
 end
