@@ -16,7 +16,7 @@ class Plan < ActiveRecord::Base
   after_create :init_config
 
   def namespace
-    "/#{self.account.id}/#{self.name}"
+    "/plans/#{self.account.id}/#{self.name}"
   end
 
   def config

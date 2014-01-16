@@ -11,7 +11,7 @@ describe Plan do
     let(:plan) { FactoryGirl.create(:plan) }
 
     it 'should have a config' do
-      assert_equal( {}, plan.config )
+      assert_equal( [{"foo"=>"bar"}, {"w00t"=>"rawr"}], plan.config )
     end
   end
 end

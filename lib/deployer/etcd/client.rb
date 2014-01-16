@@ -23,6 +23,8 @@ module Deployer
       }
 
       connection = Faraday.new(:url => connect_url, ssl: ssl_opts) do |faraday|
+        faraday.request :url_encoded
+        faraday.response :logger if Rails.env.development?
         faraday.adapter :typhoeus
       end
 
