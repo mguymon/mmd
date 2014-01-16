@@ -76,8 +76,10 @@ module Deployer
       else
         result = JSON.parse(response)
         if result['node'] && result['node']['nodes']
-          val = result['node']['nodes'].map do |node|
-            flatten_listing(node)
+          val = {}.tap do |hash|
+            result['node']['nodes'].each do |node|
+              hash.merge!( flatten_listing(node) )
+            end
           end
         end
       end

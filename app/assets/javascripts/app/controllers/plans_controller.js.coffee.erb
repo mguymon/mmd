@@ -16,4 +16,7 @@ angular.module("DeployerApp.plans").config ["$routeProvider", ($routeProvider) -
 # ### Controller
 angular.module("DeployerApp.plans").controller "PlansShowCtrl", ["$scope", '$routeParams', "Plan", "CurrentUserService", ($scope, $routeParams, Plan, CurrentUserService) ->
     $scope.plan = Plan.get({plan_id: $routeParams.plan_name })
+
+    $scope.savePlan = ->
+      $scope.plan.$update({ plan_id: $routeParams.plan_name })
 ]

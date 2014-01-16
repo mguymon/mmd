@@ -1,0 +1,7 @@
+
+<li ng-repeat="(name,config) in val">
+  <label>{{name}}:</label>
+  <a ng-if="typeof(config) != 'object'" href="#" editable-text="val[name]">{{ val }}</a>
+  <ul ng-if="typeof(config) == 'object'" ng-include="'_config_form.html'" ng-repeat="(name,val) in config[name]"></ul>
+  </ul>
+</li>

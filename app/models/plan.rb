@@ -14,13 +14,18 @@ class Plan < ActiveRecord::Base
   has_many :users, through: :user_plans
 
   after_create :init_config
+  after_save :save_config
 
   def namespace
     "/plans/#{self.account.id}/#{self.name}"
   end
 
   def config
-    config_client.list namespace, recursive: true
+    @config ||= config_client.list( namespace, recursive: true ).except! "id"
+  end
+
+  def config=(_config)
+    @config = _config
   end
 
   def config_client
@@ -46,5 +51,19 @@ class Plan < ActiveRecord::Base
   # Callback
   def init_config
     config_client.put "#{namespace}/id", self.id
+  end
+
+  # Callback
+  def save_config(_config=nil, prefix=nil)
+    # XXX: need to tombstone values to remove them
+
+    _config ||= self.config
+    _config.each do |key,val|
+      if val.is_a? Hash
+        save_config(val, "#{prefix}/#{key}")
+      else
+        config_client.put( "#{prefix}#{namespace}/#{key}", val.to_s)
+      end
+    end
   end
 end

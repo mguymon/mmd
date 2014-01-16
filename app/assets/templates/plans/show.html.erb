@@ -6,5 +6,21 @@
         </div>
     </div><!-- /.row -->
 
+    <div class="row">
+        <div class="col-lg-12">
+            <div>
+              <label>Name:</label>
+              <a href="#" editable-text="plan.name">{{ plan.name }}</a>
+            </div>
+            <ul ng-if="typeof(val) == 'object'" ng-include="'_config_form.html'"></ul>
+          
+        </div>
+    </div><!-- /.row -->
+
+    <div class="row">
+      <div class="col-lg-12">
+        <button type="button" class="btn btn-primary" ng-click="savePlan()">Save</button>
+      </div>
+    </div> 
 
 </div><!-- /#page-wrapper -->
