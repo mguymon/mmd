@@ -1,0 +1,8 @@
+angular.module("DeployerApp.directives").directive "configTree", (RecursionHelper) ->
+  restrict: "E"
+  scope:
+    config: "="
+  templateUrl: "<%= asset_path('plans/_config_form.html') %>"
+  compile: (element) ->
+
+    RecursionHelper.compile element

@@ -12,7 +12,10 @@
               <label>Name:</label>
               <a href="#" editable-text="plan.name">{{ plan.name }}</a>
             </div>
-            <ul ng-if="typeof(val) == 'object'" ng-include="'_config_form.html'"></ul>
+            
+            <div>-</div>
+
+            <config-tree config="plan.config"></config-tree>
           
         </div>
     </div><!-- /.row -->

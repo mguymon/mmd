@@ -77,10 +77,12 @@ module Deployer
         result = JSON.parse(response)
         if result['node'] && result['node']['nodes']
           val = {}.tap do |hash|
-            result['node']['nodes'].each do |node|
-              hash.merge!( flatten_listing(node) )
-            end
+            result['node']['nodes'].each { |node| hash.merge!( flatten_listing(node) ) }
           end
+
+        # XXX: no result
+        else
+          val = {}
         end
       end
 
@@ -95,7 +97,9 @@ module Deployer
     def flatten_listing(node)
       if node
         if node['dir']
-          listing = node['nodes'].map { |node| flatten_listing(node) }
+          listing = {}.tap do |hash|
+            node['nodes'].each { |node| hash.merge! flatten_listing(node) }
+          end
           { File.basename(node['key']) => listing }
         else
           { File.basename(node['key']) => node['value'] }

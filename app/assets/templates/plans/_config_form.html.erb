@@ -1,7 +1,25 @@
 
-<li ng-repeat="(name,config) in val">
-  <label>{{name}}:</label>
-  <a ng-if="typeof(config) != 'object'" href="#" editable-text="val[name]">{{ val }}</a>
-  <ul ng-if="typeof(config) == 'object'" ng-include="'_config_form.html'" ng-repeat="(name,val) in config[name]"></ul>
-  </ul>
-</li>
+<ul class="config-form">
+  <li ng-repeat="(name, val) in config">
+    <label>{{name}}:</label>
+    <a ng-if="!isObject(val)" href="#" editable-text="config[name]">{{ val }}</a>
+    <button ng-if="!isObject(val)" 
+      type="button" class="btn btn-default btn-xs enable-popover remove" rel="popover" 
+      data-toggle="popover" 
+      data-trigger="manual"
+      data-html="true"
+      data-content="Are you sure? <button class='btn btn-default btn-xs'>Yes</button> <button class='btn btn-default btn-xs'>No</button>" 
+      data-placement="right" 
+      data-original-title="Remove config?"><span class="glyphicon glyphicon-minus"></span></button>
+
+    <button ng-if="isObject(val)"
+      type="button" class="btn btn-default btn-xs enable-popover add" rel="popover" 
+      data-toggle="popover" 
+      data-trigger="manual"
+      data-html="true"
+      data-content="Name: <input type='text'/><br/>Val: <input type='text'/> <br/> <button class='btn btn-default btn-xs'>Save</button> <button class='btn btn-default btn-xs'>Cancel</button>" 
+      data-placement="right" 
+      data-original-title="Add config?"><span class="glyphicon glyphicon-plus"></span></button>
+    <config-tree config="val" ng-if="isObject(val)"></config-tree>
+  </li>
+</ul>

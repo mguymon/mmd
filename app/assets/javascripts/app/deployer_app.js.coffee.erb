@@ -8,6 +8,7 @@
 # APP DEPENDENCIES
 # ****************************************
 app = angular.module("DeployerApp", [
+    "DeployerApp.directives",
     "DeployerApp.filters",
     "DeployerApp.home",
     "DeployerApp.navigation",
@@ -20,6 +21,7 @@ app = angular.module("DeployerApp", [
 
 # DEFINE APP MODULES HERE (alphabetical)
 # ****************************************
+angular.module "DeployerApp.directives", []
 angular.module "DeployerApp.filters", []
 angular.module "DeployerApp.home", ["DeployerApp.resources", "ngRoute"]
 angular.module "DeployerApp.navigation", ["DeployerApp.resources"]

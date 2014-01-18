@@ -22,5 +22,6 @@ module Mmd
 
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts') << Rails.root.join('app', 'assets', 'templates')
     config.assets.precompile += %w( .svg .eot .woff .ttf .html)
+    config.autoload_paths += %W(#{config.root}/lib)
   end
 end

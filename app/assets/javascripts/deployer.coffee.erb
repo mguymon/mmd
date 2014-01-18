@@ -1,1 +1,4 @@
 _.mixin(_.str.exports());
+
+$(document).on 'click', '.enable-popover', ->
+  $(this).popover 'toggle'
