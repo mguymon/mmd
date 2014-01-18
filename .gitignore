@@ -12,7 +12,7 @@
 
 # Rbenv
 .ruby-version
-.rbenv_gemsets
+.rbenv-gemsets
 
 # Config
 /config/database.yml
